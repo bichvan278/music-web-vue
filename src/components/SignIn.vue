@@ -18,15 +18,18 @@
                 <h2>SIGN IN</h2>
                     <form>
                         <div class="form-group">
-                            <input type="text" name="username" v-model="username" placeholder="Username" class="form-control form-control-lg" />
+                            <input  type="text" name="username" v-model="username" autocomplete="off" 
+                                    placeholder="Username" class="form-control form-control-lg" />
                         </div>
 
                         <div class="form-group">
-                            <input type="password" name="password" v-model="password" placeholder="Password" class="form-control form-control-lg" />
+                            <input  type="password" name="password" v-model="password" autocomplete="off" 
+                                    placeholder="Password" class="form-control form-control-lg" />
                         </div>
 
-                        <button type="submit" v-on:click="login()" class="btn btn-dark btn-lg btn-block">Sign In</button>
-
+                        <button type="submit" v-on:click="signin()" class="btn btn-dark btn-lg btn-block">Sign In</button>
+                    </form>
+                    <!-- End form login -->
                         <br/>
                         
                         <p class="text1">Don't have an account?
@@ -34,7 +37,7 @@
                         </p>
                         <br>
                         <p class="text1">See more your profile
-                            <router-link :to="{name: 'userprofile'}" class="btn1">Profile</router-link>
+                            <router-link :to="{name: 'adminpage'}" class="btn1">Admin Page</router-link>
                         </p>
 
                         <div class="social-icons">
@@ -44,16 +47,17 @@
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                             </ul>
                         </div>
-                    </form>
-                <!-- Default form login -->
             </div>
-
         </div>
+        <footer-comp></footer-comp>
     </div>
 </template>
 
 <script>
+import FooterComp from './partial/FooterComp.vue'
+
 export default {
+    components: {FooterComp},
     name: "SignIn",
     data() {
         return {
@@ -61,13 +65,41 @@ export default {
             password: ''
         }
     },
+    // computed: {
+    //     loggedIn() {
+    //         this.$store.state.auth.status.loggedIn;
+    //     }
+    // },
+    // created() {
+    //     if (this.loggedIn) {
+    //         this.$router.push('/userprofile');
+    //     }
+    // },
     methods: {
-        async login(){
-            const result = await axios.get('http://localhost:3000/accounts?username=${this.username}&password=${this.password}');
+        async signin(){
+            const result = await axios.get('http://localhost:3000/accounts',{
+                username: this.username,
+                password: this.password
+            });
             if(result.status == 200) {
                 localStorage.setItem('user',JSON.stringify(result.data));
+                alert("Login is successful");
+                this.$router.push('userprofile');
+            }else{
+                alert("Failure! Login again!")
             }
-            alert("Login is successful");
+            
+
+            // this.$validator.validateAll().then(isValid => {
+            //     if (this.user.username && this.user.password) {
+            //         this.$store.dispatch('auth/login', this.user).then(
+            //             () => {
+            //             this.$router.push('/userprofile');
+            //         }).catch( err => {
+            //             console.log(err);
+            //         })
+            //     }
+            // });    
         }
     }
 }

@@ -1,15 +1,15 @@
 <template>
-    <div class="sing-list">
+    <div class="artist-list">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 140px;">
             <div class="head-title">
-                <h1 class="text-page"><span>single list</span></h1>
+                <h1 class="text-page"><span>artist list</span></h1>
             </div>
             <div class="row">
                 <div class="nav">
                     <div class="form-group">
-                        <router-link :to="{name: 'addsingle'}">
-                            <b-button class="btnAddsingle">+ ADD NEW SINGLE</b-button>
+                        <router-link :to="{name: 'addartist'}">
+                            <b-button class="btnAddArtist">+ NEW ARTIST</b-button>
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
@@ -22,26 +22,23 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">NAME SONG</th>
+                            <th scope="col">NAME ARTIST</th>
                             <th scope="col">IMG</th>
-                            <th scope="col">SINGER</th>
                             <th scope="col">EDIT</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <!-- <tbody>
                         <tr v-for="single in singles" :key="single.songid">
                             <td scope="row">{{single.songid}}</td>               
                             <td>{{single.namesong}}</td>
                             <td>{{single.imgsong}}</td>
                             <td>{{single.artistName}}</td>
                             <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editsingle', params: {id: single.songid} }">
-                                    <b-button class="btn btnEdit">EDIT</b-button>
-                                </router-link>
+                                <b-button class="btn btnEdit">EDIT</b-button>
                                 <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
                             </td>
                         </tr>     
-                    </tbody>
+                    </tbody> -->
                 </table>
             </div>
         </div>
@@ -54,7 +51,7 @@ import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
 
 export default {
-    name:'SingleList',
+    name:'ArtistList',
     components: {
         HeaderComp,
         FooterComp
@@ -96,12 +93,12 @@ th, td {
     display: flex;
     justify-content: center;
 }
-.btnAddsingle {
+.btnAddArtist {
     margin-left: 0px;
     background-color: white;
     color: black;
 }
-.btnAddsingle:hover {
+.btnAddArtist:hover {
     margin-left: 0px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);

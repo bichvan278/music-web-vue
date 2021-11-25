@@ -10,7 +10,7 @@
                 <div class="col-md-4">
                     <!-- Default form login -->
                     <h2 class="res-title">TAKE IT RIGHT NOW</h2>
-                        <form @submit:prevent="signup">
+                        <form>
                             <div class="form-group">
                                 <input type="text" name="email" v-model="email" placeholder="Email" class="form-control form-control-lg" />
                             </div>
@@ -27,12 +27,12 @@
                                 <input type="password" name="password" v-model="password" placeholder="Password" class="form-control form-control-lg" />
                             </div>
 
-                            <button type="submit" class="btn-reg">Register</button>
-
+                            <button type="submit" class="btn-reg" v-on:click="register()">Register</button>
+                        </form>
                             <br/>
                             
                             <p class="text-reg">Back to home page!
-                                <router-link class="btn2" :to="{name: ''}">Home Page</router-link>
+                                <router-link class="btn2" :to="{name: 'HomePage'}">Home Page</router-link>
                             </p>
 
                             <div class="social-icons">
@@ -42,19 +42,22 @@
                                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 </ul>
                             </div>
-                        </form>
                     <!-- Default form login -->
                 </div>
 
                 <div class="col-md-4"></div>
             </div>
         </div>
+        <footer-comp></footer-comp>
     </div>
 </template>
 
 <script>
+import FooterComp from './partial/FooterComp.vue'
+
 export default {
     name: 'Register',
+    components: {FooterComp},
     data() {
         return {
             email: '',
@@ -63,19 +66,46 @@ export default {
             password: ''
         }
     },
+    // computed: {
+    //     loggedIn() {
+    //         return this.$store.state.auth.status.loggedIn;
+    //     }
+    // },
+    // mounted() {
+    //     if (this.loggedIn) {
+    //         this.$router.push('/userprofile');
+    //     }
+    // },
+    // methods: {
+    //     register() {
+    //         this.$validator.validate().then(isValid => {
+    //             if (isValid) {
+    //             this.$store.dispatch('auth/signup', this.user).then(
+    //                 res => {
+    //                     console.log(res);
+    //                     alter("Sign up is successful!")
+    //                     this.$router.push('signin')
+    //                 });
+    //             }else{
+    //                 alert("Something maybe is wrong! Check your information again!")
+    //             }
+    //         });
+    //     }
+    // }
     methods: {
-        signup() {
-            // const data = {
-            //     email: this.email,
-            //     phone: this.phone,
-            //     username: this.username,
-            //     password: this.password
-            // }
-            axios.post('http://localhost:3000/accounts?email=${this.email}&phone=${this.phone}&username=${this.username}&password=${this.password}')
+        async register() {
+            await axios.post("http://localhost:3000/accounts",{
+                email: this.email,
+                phone: this.phone,
+                username: this.username,
+                password: this.password
+            })
             .then(response => {
-                console.warn(response);
-                if(response.status === 201){
+                console.log(response);
+                if(response.status == 201){
+                    console.log(response);
                     alert("Successful! Login right now to see more.");
+                    this.$router.push('signin');
                 }else{
                     alert("Oops! You have a mistake!");
                 }

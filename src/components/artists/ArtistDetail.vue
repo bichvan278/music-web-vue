@@ -9,11 +9,12 @@
                     <h1 class="text-page"><span>artist</span></h1>
                 </div>
                 <div class="art-detail" 
-                     style=" margin-top: -25px;">
+                     style=" margin-top: -25px;"
+                     v-for="currentArt in artists" :key="currentArt.id">
                     
                     <img src="./../../assets/img/jj.jpg" class="art-img">
-                    <h2 class="art-name">name artist</h2>
-                    <p style="text-align: center; font-size: 15px;">the special information about this artist . . .</p>
+                    <h2 class="art-name">{{currentArt.name_a}}</h2>
+                    <p style="text-align: center; font-size: 15px;">{{currentArt.description}}</p>
                 </div>
             </div>
         </div>
@@ -24,21 +25,24 @@
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 
 export default {
-    name: 'Artist',
+    name: 'ArtistDetail',
     components: {
         HeaderComp
+    },
+    data() {
+        return {
+            artists: []
+        }
+    },
+    async mounted() {
+        await axios
+                .get("http://localhost:3000/artists?embed=singles&id=" + this.$router.params[0].id)
+                .then( res => {
+                    console.log(res)
+                    this.artists = res.data 
+                })
+                .catch(error => console.log(error))
     }
-    // data() {
-    //     return{
-    //         singles: []
-    //     }
-    // },
-    // async mounted() {
-    //     axios
-    //         .get('http://localhost:3000/singles/')
-    //         .then(res => (this.singles.currentArtist = res.data))
-    //         .catch(err => console.log(err))
-    // }
 
 }
 </script>

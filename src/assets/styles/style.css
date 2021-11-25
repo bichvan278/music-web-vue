@@ -6,8 +6,15 @@
         line-height: 0.7em;
         text-align: center;
         font-size: 200px;
-        color: rgb(197, 194, 194);
+        color: rgb(178, 197, 240);
     }
+    
+    .cards {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
 
     .vue-tempalte,
     .vertical-center {
@@ -17,20 +24,20 @@
     }
 
     .vertical-center {
-    display: flex;
-    text-align: left;
-    justify-content: center;
-    flex-direction: column;    
+        display: flex;
+        text-align: left;
+        justify-content: center;
+        flex-direction: column;    
     }
 
     .inner-block {
-    width: 450px;
-    margin: auto;
-    background: #ffffff;
-    box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-    padding: 40px 55px 45px 55px;
-    border-radius: 15px;
-    transition: all .3s;
+        width: 450px;
+        margin: auto;
+        background: #ffffff;
+        box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+        padding: 40px 55px 45px 55px;
+        border-radius: 15px;
+        transition: all .3s;
     }
 
     .vertical-center .form-control:focus {
@@ -65,10 +72,10 @@
     }
 
     .vertical-center h3 {
-    text-align: center;
-    margin: 0;
-    line-height: 1;
-    padding-bottom: 20px;
+        text-align: center;
+        margin: 0;
+        line-height: 1;
+        padding-bottom: 20px;
     }
 
     .sign-up{

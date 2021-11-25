@@ -12,7 +12,7 @@
                     <div class="detail-info">
                         <h3 class="u-title">PROFILE</h3>
                         <div class="head-title">
-                            <h3 class="text-user"><span>user name</span></h3>
+                            <h4 class="text-user" v-if="user"><span>{{user.username}}</span></h4>
                         </div>
                         <router-link :to="{name: 'editprofile'}" style="color: gray;">
                             <p class="edit-pro" style="color: gray;">EDIT PROFILE <i class="far fa-edit"></i></p>
@@ -23,17 +23,35 @@
                 <h2 class="content-title" style="color: slategrey;">MY PLAYLIST</h2>
             </div>
         </div>
+        <footer-comp></footer-comp>
     </div>
 </template>
 
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
+import FooterComp from '../partial/FooterComp.vue'
 
 export default {
     name: 'UserProfile',
     components: {
-        HeaderComp
+        HeaderComp,
+        FooterComp
     }
+    // data() {
+    //     return {
+    //         user: null
+    //     }
+    // },
+    // async created() {
+    //     const response = await axios.get("http://localhost:3000/accounts",{
+    //         headers: {
+    //             Authorization: 'Bearer' + localStorage.getItem('user')
+    //         }
+    //     });
+    //     this.user = response.data.user[0];
+    //     console.log(response);
+    //     // alert("Connected!")
+    // }
 }
 </script>
 

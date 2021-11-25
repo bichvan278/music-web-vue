@@ -13,6 +13,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
 Vue.config.productionTip = false
 
 window.axios = require('axios');
@@ -24,3 +25,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+

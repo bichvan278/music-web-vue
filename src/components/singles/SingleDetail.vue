@@ -1,7 +1,8 @@
 <template>
-    <div class="single-detail">
+    <div class="single-detail" style="display: grid">
         <div class="header-vue">
             <header-comp></header-comp>
+            <search-bar></search-bar>
         </div>
         <!-- Display detail of single view -->
         <div class="view-detail" style="margin-top: 130px;">
@@ -15,10 +16,13 @@
                             </div>
                             <div class="view-audio">
                                 <div class="view-img">
-                                    <img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" />
+                                    <img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" class="img-single"/>
                                 </div>
                                 <div class="view-nav">
-                                    <p class="name-art">{{currentSong.artist}}</p>
+                                    <router-link :to="{name: 'artist'}" class="name-art" style="text-decoration: none;">
+                                        <p class="name-art">{{artistName}}</p>
+                                    </router-link>
+                                    <p class="name-art">{{artistName}}</p>
                                     <!-- Button music player -->
                                     <div class="navigation" style="margin-left: 9px;">
                                         <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
@@ -38,51 +42,67 @@
                                 </div>
                             </div>
                             <!-- Comment HTML-->
-                            <single-cmt></single-cmt>
+                            <!-- <single-cmt></single-cmt> -->
                         </div>
                     </div>
 
                     <!-- List other single of this artist -->
                     <div class="col-md-3">
-                        <h2 class="content-title1">playing</h2>
+                        <!-- <h2 class="content-title1">playing</h2>
                         <hr>
-                        <div class="small-list" v-for="item in singles" :key="item.artist">
+                        <div class="small-list" v-for="item in singles" :key="item.artistID">
                             <h4>{{item.namesong}}</h4>
-                            <router-link :to="{name: 'artist'}" class="art-name1"><p>{{item.artist}}</p></router-link>
-                        </div>
+                            <router-link :to="{name: 'artist'}" class="art-name1"><p>{{artistName}}</p></router-link>
+                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
+        <footer-comp></footer-comp>
     </div>
 </template>
 
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import SingleCmt from "@/components/singles/SingleCmt.vue"
+import FooterComp from '../partial/FooterComp.vue'
+import SearchBar from '../partial/SearchBar.vue'
 
 export default {
     name: 'SingleDetail',
     components: {
         HeaderComp,
-        SingleCmt
+        SingleCmt,
+        FooterComp,
+        SearchBar
     },
     data() {
         return {
             singles: null,
-            singles: []
+            artistName: null,
         }
     },
     async mounted() {
         axios
             .get('http://localhost:3000/singles?songid=' + this.$route.params.id)
-            .then(response => (this.singles = response.data))
+            .then(response => {
+                this.singles = response.data;
+            axios 
+                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
+                .then( resq =>{
+                    this.artistName = resq.data[0].name_a;
+                    console.log(this.artistName);
+            });
+
+            })
             .catch(error => console.log(error))
 
         axios
             .get('http://localhost:3000/singles/')
             .then(result => (this.singles.item = result.data))
             .catch(err => console.log(err))
+
+        
     }
 }
 </script>
@@ -103,11 +123,6 @@ body {
 }
 
 .img-single {
-    width: 180px;
-    height: 180px;
-}
-
-img {
     width: 180px;
     height: 180px;
 }

@@ -14,7 +14,7 @@
             <div class="popular-list" style="margin-top: -80px;">
                 <section>
                     <div class="cards">
-                        <single-card  v-for="single in singles" :key="single.songid" :single="single"></single-card>
+                        <single-card  v-for="single in singles" :key="single._id" :single="single"></single-card>
                     </div>
                 </section>
             </div>
@@ -32,6 +32,7 @@ import FooterComp from "@/components/partial/FooterComp.vue"
 import SingleCard from "@/components/singles/SingleCard.vue"
 import SearchBar from "@/components/partial/SearchBar.vue"
 import SlideComp from "@/components/partial/SlideComp.vue"
+import { getAllSingles } from "@/../services/ApiServices.js"
 
 export default {
     name: "HomePage",
@@ -48,7 +49,7 @@ export default {
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/singles/");
+        const result = await getAllSingles();
         console.warn(result);
         this.singles = result.data;
     }

@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <!-- List of all singles -->
+                <!-- List of all playlists -->
                 <table class="table" style=" margin-top: 30px;"> 
                     <thead class="thead-dark">
                         <tr>
@@ -28,18 +28,20 @@
                             <th scope="col">EDIT</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
+                    <tbody>
+                        <tr v-for="playlist in playlists" :key="playlist._id">
+                            <td scope="row">{{playlist._id}}</td>               
+                            <td>{{playlist.name}}</td>
+                            <td>image</td>
+                            <td>{{playlist.createdBy.username}}</td>
                             <td style="display: flex; justify-content: center;">
-                                <b-button class="btn btnEdit">EDIT</b-button>
+                                <router-link :to="{name: 'editplaylist', params: {id: playlist._id} }">
+                                    <b-button class="btn btnEdit">EDIT</b-button>
+                                </router-link>
                                 <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
                             </td>
                         </tr>     
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -50,6 +52,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
+import { getAllPlaylists } from "@/services/ApiServices.js"
 
 export default {
     name:'PlaylistList',
@@ -59,25 +62,13 @@ export default {
     },
     data() {
         return {
-            artistName: null,
-            singles: []
+            playlists: []
         }
     },
     async mounted() {
-        axios
-            .get('http://localhost:3000/singles')
-            .then(response => {
-                this.singles = response.data;
-            axios 
-                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
-                .then( resq =>{
-                    this.artistName = resq.data[0].name_a;
-                    console.log(this.artistName);
-            });
-
-            })
-            .catch(error => console.log(error))
-
+        const result = await getAllPlaylists();
+        console.warn(result);
+        this.playlists = result.data;
     }
 }
 </script>

@@ -1,16 +1,16 @@
 <template>
-    <div class="play-page">
+    <div class="single-page">
         <header-comp></header-comp>
         <search-bar></search-bar>
         <div class="container">
             <div class="row">
                 <div class="head-title">
-                    <h1 class="text-page"><span>playlist</span></h1>
+                    <h1 class="text-page"><span>single</span></h1>
                 </div>
                 <div class="popular-list" style="margin-top: -80px;">
                     <section>
                         <div class="cards">
-                            <playlist-card  v-for="playlist in playlists" :key="playlist._id" :playlist="playlist"></playlist-card>
+                            <single-card v-for="single in singles" :key="single._id" :single="single"></single-card>
                         </div>
                     </section>
                 </div>
@@ -24,21 +24,21 @@
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
-import PlaylistCard from './PlaylistCard.vue'
-import { getAllPlaylists } from "@/services/ApiServices.js"
+import { getAllSingles } from "@/services/ApiServices.js"
+import SingleCard from '@/components/singles/SingleCard.vue'
 
 export default {
-    name: 'PlaylistPage',
-    components: { HeaderComp, SearchBar, FooterComp, PlaylistCard },
+    name: 'singlePage',
+    components: { HeaderComp, SearchBar, FooterComp, SingleCard },
     data() {
         return {
-            playlists: [],
+            singles: [],
         }
     },
     async mounted() {
-        const result = await getAllPlaylists();
+        const result = await getAllSingles();
         console.warn(result);
-        this.playlists = result.data;
+        this.singles = result.data;
     }
 }
 </script>

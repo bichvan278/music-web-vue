@@ -6,6 +6,7 @@ import SignIn from '@/components/SignIn'
 import Register from '@/components/Register'
 import ContactPage from '@/components/ContactPage'
 // Single
+import SinglePage from '@/components/singles/SinglePage'
 import SingleDetail from '@/components/singles/SingleDetail'
 import SingleList from '@/components/singles/SingleList'
 import AddSingle from '@/components/singles/AddSingle'
@@ -59,7 +60,12 @@ export default new Router({
       component: ContactPage
     },
     {
-      path: '/singles/:id',
+      path: '/singlepage',
+      name: 'singepage',
+      component: SinglePage
+    },
+    {
+      path: '/single/:id',
       name: 'singledetail',
       component: SingleDetail
     },
@@ -109,7 +115,7 @@ export default new Router({
       component: AddArtist
     },
     {
-      path: '/editartist',
+      path: '/editartist/:id',
       name: 'editartist',
       component: EditArtist
     },
@@ -119,7 +125,7 @@ export default new Router({
       component: PlaylistPage
     },
     {
-      path: '/playlistdetail',
+      path: '/playlist/:id',
       name: 'playlistdetail',
       component: PlaylistDetail
     },
@@ -144,7 +150,7 @@ export default new Router({
       component: AlbumPage
     },
     {
-      path: '/albumdetail',
+      path: '/album/:id',
       name: 'albumdetail',
       component: AlbumDetail
     },
@@ -159,7 +165,7 @@ export default new Router({
       component: AddAlbum
     },
     {
-      path: '/editalbum',
+      path: '/editalbum/:id',
       name: 'editalbum',
       component: EditAlbum
     },

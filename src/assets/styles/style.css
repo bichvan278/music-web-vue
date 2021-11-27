@@ -9,6 +9,14 @@
         color: rgb(178, 197, 240);
     }
     
+    th, td {
+        text-align: left;
+    }
+    
+    tr:hover {
+        color: rgb(37, 28, 163);
+    }
+
     .cards {
         width: 100%;
         display: flex;

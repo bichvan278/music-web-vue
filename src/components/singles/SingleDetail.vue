@@ -10,9 +10,9 @@
                 <div class="row">
                     <!-- Imagine single detail -->
                     <div class="col-md-9">
-                        <div class="main-view" v-for="currentSong in singles" :key="currentSong.songid">
+                        <div class="main-view">
                             <div class="head-title">
-                                <h3 class="text-title"><span>{{currentSong.namesong}}</span></h3>
+                                <h3 class="text-title"><span>{{single.name}}</span></h3>
                             </div>
                             <div class="view-audio">
                                 <div class="view-img">
@@ -20,9 +20,8 @@
                                 </div>
                                 <div class="view-nav">
                                     <router-link :to="{name: 'artist'}" class="name-art" style="text-decoration: none;">
-                                        <p class="name-art">{{artistName}}</p>
+                                        <p class="name-art">{{single.artistID.name}}</p>
                                     </router-link>
-                                    <p class="name-art">{{artistName}}</p>
                                     <!-- Button music player -->
                                     <div class="navigation" style="margin-left: 9px;">
                                         <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
@@ -67,6 +66,7 @@ import HeaderComp from "@/components/partial/HeaderComp.vue"
 import SingleCmt from "@/components/singles/SingleCmt.vue"
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
+import { getSingleDetail } from "@/services/ApiServices.js"
 
 export default {
     name: 'SingleDetail',
@@ -78,31 +78,18 @@ export default {
     },
     data() {
         return {
-            singles: null,
-            artistName: null,
+            single: {
+                name: null,
+                artistID: null,
+                audio: null
+            }
         }
     },
     async mounted() {
-        axios
-            .get('http://localhost:3000/singles?songid=' + this.$route.params.id)
-            .then(response => {
-                this.singles = response.data;
-            axios 
-                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
-                .then( resq =>{
-                    this.artistName = resq.data[0].name_a;
-                    console.log(this.artistName);
-            });
-
-            })
-            .catch(error => console.log(error))
-
-        axios
-            .get('http://localhost:3000/singles/')
-            .then(result => (this.singles.item = result.data))
-            .catch(err => console.log(err))
-
-        
+        const id = this.$route.params.id
+        const result = await getSingleDetail(id);
+        console.warn(result);
+        this.single = result.data;
     }
 }
 </script>

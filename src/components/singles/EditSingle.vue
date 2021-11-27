@@ -13,13 +13,13 @@
                     <form action="" class="frmEditsingle">
 
                         <div class="form-group">
-                            <input type="text" v-model="single.namesong" placeholder="Name song" class="form-group">
+                            <input type="text" v-model="single.name" placeholder="Name song" class="form-group">
                         </div>
 
                         <!-- Selection Artist Dropdown -->
                         <div class="form-group">
                             <select v-model="single.artist" class="form-group">
-                                <option value="Artist" v-for="artist in artists" :key="artist.id">{{artist.name_a}}</option>
+                                <option value="Artist" v-for="artist in artists" :key="artist._id">{{artist.name}}</option>
                             </select>
                         </div>
 
@@ -55,6 +55,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
+import { getAllArtists } from "@/services/ApiServices.js"
 
 export default {
     name: 'EditSingle',
@@ -66,7 +67,6 @@ export default {
         return {
             single: {
                 namesong: '',
-                artistID: '',
                 selectedImg: null,
                 selectedAudio: null
             },
@@ -74,7 +74,7 @@ export default {
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/artists/");
+        const result = await getAllArtists();
         console.warn(result);
         this.artists = result.data;
     },

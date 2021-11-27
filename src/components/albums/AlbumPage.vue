@@ -10,7 +10,7 @@
                 <div class="popular-list" style="margin-top: -80px;">
                     <section>
                         <div class="cards">
-                            <album-card  v-for="single in singles" :key="single.songid" :single="single"></album-card>
+                            <album-card  v-for="album in albums" :key="album._id" :album="album"></album-card>
                         </div>
                     </section>
                 </div>
@@ -25,19 +25,20 @@ import HeaderComp from '../partial/HeaderComp.vue'
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
 import AlbumCard from './AlbumCard.vue'
+import { getAllAlbums } from "@/services/ApiServices.js"
 
 export default {
     name: 'AlbumPage',
     components: { HeaderComp, SearchBar, FooterComp, AlbumCard },
     data() {
         return {
-            singles: [],
+            albums: [],
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/singles/");
+        const result = await getAllAlbums();
         console.warn(result);
-        this.singles = result.data;
+        this.albums = result.data;
     }
 
 }

@@ -36,9 +36,9 @@
                             <router-link class="btn1" :to="{name: 'register'}">Register</router-link>
                         </p>
                         <br>
-                        <p class="text1">See more your profile
+                        <!-- <p class="text1">See more your profile
                             <router-link :to="{name: 'adminpage'}" class="btn1">Admin Page</router-link>
-                        </p>
+                        </p> -->
 
                         <div class="social-icons">
                             <ul>
@@ -55,6 +55,7 @@
 
 <script>
 import FooterComp from './partial/FooterComp.vue'
+import {login} from "@/services/ApiServices.js"
 
 export default {
     components: {FooterComp},
@@ -65,41 +66,44 @@ export default {
             password: ''
         }
     },
-    // computed: {
-    //     loggedIn() {
-    //         this.$store.state.auth.status.loggedIn;
-    //     }
-    // },
-    // created() {
-    //     if (this.loggedIn) {
-    //         this.$router.push('/userprofile');
-    //     }
-    // },
     methods: {
-        async signin(){
-            const result = await axios.get('http://localhost:3000/accounts',{
-                username: this.username,
-                password: this.password
-            });
-            if(result.status == 200) {
-                localStorage.setItem('user',JSON.stringify(result.data));
-                alert("Login is successful");
-                this.$router.push('userprofile');
+        async signin() {
+            const username = this.username;
+            const password = this.password;
+            if(username===""){
+                console.log("Tên đăng nhập không được rỗng!")
+            }else if(password===""){
+                console.log("Mật khẩu không được rỗng!")
             }else{
-                alert("Failure! Login again!")
-            }
-            
+                const response = await login(username, password);
+                const data = response.data;
+                console.log(data)
+                if (data.user) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    localStorage.setItem("role", JSON.stringify(data.role))
+                    console.log(data.user)
+                    const role = await data.role.name;
+        
+                    if(role==='Member'){
+						this.$router.replace({ name: 'userprofile' });
+                    }else if(role==='Admin'){
+						this.$router.replace({ name: 'adminpage' });
+                    }else {
+                        console.log('Having s.th wrong!')
+                    }
+                }
 
-            // this.$validator.validateAll().then(isValid => {
-            //     if (this.user.username && this.user.password) {
-            //         this.$store.dispatch('auth/login', this.user).then(
-            //             () => {
-            //             this.$router.push('/userprofile');
-            //         }).catch( err => {
-            //             console.log(err);
-            //         })
-            //     }
-            // });    
+            }
+            // const result = await login();
+            // if(result.status == 200) {
+            //     localStorage.setItem('user',JSON.stringify(result.data));
+            //     alert("Login is successful");
+            //     this.$router.push('userprofile');
+            // }else{
+            //     alert("Failure! Login again!")
+            // }
+            
         }
     }
 }

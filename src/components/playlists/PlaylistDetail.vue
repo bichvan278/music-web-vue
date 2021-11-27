@@ -11,9 +11,9 @@
                     <div class="detail-info-play">
                         <h4 class="u-title">PLAYLIST</h4>
                         <div class="head-title">
-                            <h3 class="text-user"><span>name playlist</span></h3>
+                            <h3 class="text-user"><span>{{playlist.name}}</span></h3>
                         </div>
-                        <p class="edit-pro">CREATE BY user.name</p>
+                        <p class="edit-pro">CREATE BY {{playlist.createdBy.username}}</p>
                         <router-link :to="{name: 'editplaylist'}" style="color: gray;">
                             <p class="edit-pro" style="color: gray;">EDIT PLAYLIST <i class="far fa-edit"></i></p>
                         </router-link>
@@ -25,22 +25,20 @@
                         <tr>
                             <th scope="col">NAME SONG</th>
                             <th scope="col">ARTIST</th>
-                            <th scope="col">ALBUM</th>
                             <th scope="col">PLAY</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
-                            <td style="display: flex; justify-content: center;">
-                                <b-button class="btn btnEdit">EDIT</b-button>
-                                <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
+                    <tbody>
+                        <tr v-for="single in singlesinplay" :key="single._id">
+                            <td scope="row">{{single.singleIn[0].name}}</td>               
+                            <td>Artist</td>
+                            <td style="display: flex; justify-content: left;">
+                                <button class="action-btn" id="play">
+                                    <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                </button>
                             </td>
                         </tr>     
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -51,9 +49,30 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
+import { getPlaylistDetail, getAllSinglesinPlaylist } from "@/services/ApiServices.js"
+
 export default {
     name: 'PlaylistDetial',
-    components: {HeaderComp, FooterComp}
+    components: {HeaderComp, FooterComp},
+    data () {
+        return {
+            playlist: {
+                name: null,
+                username: null
+            },
+            singlesinplay: []
+        }
+    },
+    async mounted() {
+        const id = this.$route.params.id
+        const result = await getPlaylistDetail(id);
+        console.warn(result);
+        this.playlist = result.data;
+
+        const result2 = await getAllSinglesinPlaylist(id);
+        console.warn(result2);
+        this.singlesinplay = result2.data.getAllsingles;
+    }
 }
 </script>
 
@@ -85,5 +104,14 @@ th, td {
     /* color: rgb(197, 194, 194); */
     color: rgb(37, 28, 163);
 }
-
+.action-btn {
+    background: white;
+    border: 0px;
+    font-size: 25px;
+    color: rgb(21, 22, 26);
+    cursor: pointer;
+    padding: 10px;
+    margin: 0px 15px;
+    margin-left: -5px;
+}
 </style>

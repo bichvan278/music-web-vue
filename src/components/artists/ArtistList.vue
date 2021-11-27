@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <!-- List of all singles -->
+                <!-- List of all artists -->
                 <table class="table" style=" margin-top: 30px;"> 
                     <thead class="thead-dark">
                         <tr>
@@ -27,18 +27,19 @@
                             <th scope="col">EDIT</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
+                    <tbody>
+                        <tr v-for="artist in artists" :key="artist._id">
+                            <td scope="row">{{artist._id}}</td>               
+                            <td>{{artist.name}}</td>
+                            <td>{{artist.image}}</td>
                             <td style="display: flex; justify-content: center;">
-                                <b-button class="btn btnEdit">EDIT</b-button>
+                                <router-link :to="{name: 'editartist', params: {id: artist._id} }">
+                                    <b-button class="btn btnEdit">EDIT</b-button>
+                                </router-link>
                                 <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
                             </td>
                         </tr>     
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -49,6 +50,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
+import { getAllArtists } from "@/services/ApiServices.js"
 
 export default {
     name:'ArtistList',
@@ -58,25 +60,13 @@ export default {
     },
     data() {
         return {
-            artistName: null,
-            singles: []
+            artists: []
         }
     },
     async mounted() {
-        axios
-            .get('http://localhost:3000/singles')
-            .then(response => {
-                this.singles = response.data;
-            axios 
-                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
-                .then( resq =>{
-                    this.artistName = resq.data[0].name_a;
-                    console.log(this.artistName);
-            });
-
-            })
-            .catch(error => console.log(error))
-
+        const result = await getAllArtists();
+        console.warn(result);
+        this.artists = result.data;
     }
 }
 </script>

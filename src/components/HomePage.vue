@@ -32,7 +32,7 @@ import FooterComp from "@/components/partial/FooterComp.vue"
 import SingleCard from "@/components/singles/SingleCard.vue"
 import SearchBar from "@/components/partial/SearchBar.vue"
 import SlideComp from "@/components/partial/SlideComp.vue"
-import { getAllSingles } from "@/../services/ApiServices.js"
+import { getAllSingles } from "@/services/ApiServices.js"
 
 export default {
     name: "HomePage",

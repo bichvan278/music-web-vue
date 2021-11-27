@@ -28,18 +28,20 @@
                             <th scope="col">EDIT</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
+                    <tbody>
+                        <tr v-for="album in albums" :key="album._id">
+                            <td scope="row">{{album._id}}</td>               
+                            <td>{{album.name}}</td>
+                            <td>{{album.image}}</td>
+                            <td>{{album.alBofArtist.name}}</td>
                             <td style="display: flex; justify-content: center;">
-                                <b-button class="btn btnEdit">EDIT</b-button>
+                                <router-link :to="{name: 'editalbum', params: {id: album._id} }">
+                                    <b-button class="btn btnEdit">EDIT</b-button>
+                                </router-link>
                                 <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
                             </td>
                         </tr>     
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -50,6 +52,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
+import { getAllAlbums } from "@/services/ApiServices.js"
 
 export default {
     name:'AlbumList',
@@ -59,25 +62,13 @@ export default {
     },
     data() {
         return {
-            artistName: null,
-            singles: []
+            albums: []
         }
     },
     async mounted() {
-        axios
-            .get('http://localhost:3000/singles')
-            .then(response => {
-                this.singles = response.data;
-            axios 
-                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
-                .then( resq =>{
-                    this.artistName = resq.data[0].name_a;
-                    console.log(this.artistName);
-            });
-
-            })
-            .catch(error => console.log(error))
-
+        const result = await getAllAlbums();
+        console.warn(result);
+        this.albums = result.data;
     }
 }
 </script>

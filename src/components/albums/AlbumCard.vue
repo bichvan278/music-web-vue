@@ -1,10 +1,10 @@
 <template>
     <div class="card">
-        <!-- <img :src="single.imgsong[0]" /> -->
-        <img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" />
-        <p class="card-desc">{{single.artistID}}</p>
-        <router-link :to="{name: 'singledetail', params: {id: single.songid} }" style="text-decoration: none;">
-            <p class="card-title">{{single.namesong}}</p>
+        <!-- <img :src="album.imgsong[0]" /> -->
+        <img src="./../../assets/img/music.jpg" />
+        <p class="card-desc">{{album.alBofArtist.name}}</p>
+        <router-link :to="{name: 'albumdetail', params: {id: album._id} }" style="text-decoration: none;">
+            <p class="card-title">{{album.name}}</p>
         </router-link>
     </div>
 </template>
@@ -12,7 +12,7 @@
 <script>
 export default {
     name: "AlbumCard",
-    props: ["single"],
+    props: ["album"],
     data() {
         return {
         } 

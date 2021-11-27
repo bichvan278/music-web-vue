@@ -6,17 +6,19 @@
                 <!-- Album information -->
                 <div class="info-album">
                     <div class="img-album">
-                        <img src="./../../assets/img/music.jpg" class="img-album">
+                        <!-- <img src="./../../assets/img/music.jpg" class="img-album"> -->
+                        <img v-bind:src=" `data:image/jpg;base64,${album.image}` " class="img-album">
                     </div>
                     <div class="detail-info-play">
                         <h4 class="u-title">ALBUM</h4>
                         <div class="head-title">
-                            <h3 class="text-user"><span>name album</span></h3>
+                            <h3 class="text-user"><span>{{album.name}}</span></h3>
                         </div>
-                        <p class="edit-pro">CREATE BY user.name</p>
-                        <router-link :to="{name: 'editalbum'}" style="color: gray;">
+                        <p class="edit-pro">{{album.alBofArtist.name}}</p>
+                        <p class="edit-pro">{{album.release}}</p>
+                        <!-- <router-link :to="{name: 'editalbum'}" style="color: gray;">
                             <p class="edit-pro" style="color: gray;">EDIT ALBUM <i class="far fa-edit"></i></p>
-                        </router-link>
+                        </router-link> -->
                     </div>
                 </div>
                 <!-- Show singles in this album -->
@@ -28,18 +30,17 @@
                             <th scope="col">PLAY</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
-                            <td style="display: flex; justify-content: center;">
-                                <b-button class="btn btnEdit">EDIT</b-button>
-                                <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
+                    <tbody>
+                        <tr v-for="single in singlesinalb" :key="single._id">
+                            <td scope="row">{{single.singleInAlb[0].name}}</td>
+                            <td>{{album.alBofArtist.name}}</td>
+                            <td style="display: flex; justify-content: left;">
+                                <button class="action-btn" id="play">
+                                    <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                </button>
                             </td>
                         </tr>     
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -50,17 +51,36 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
+import { getAlbumDetail, getAllSinglesinAlbum} from "@/services/ApiServices.js"
 
 export default {
     name: 'AlbumDetial',
-    components: {HeaderComp, FooterComp}
+    components: {HeaderComp, FooterComp},
+    data() {
+        return {
+            album: {
+                image: null,
+                name: null,
+                alBofArtist: null,
+                realese: null
+            },
+            singlesinalb: []
+        }
+    },
+    async mounted() {
+        const id = this.$route.params.id
+        const result = await getAlbumDetail(id);
+        console.warn(result);
+        this.album = result.data;
+
+        const result1 = await getAllSinglesinAlbum(id);
+        console.warn(result1);
+        this.singlesinalb = result1.data;
+    }
 }
 </script>
 
 <style>
-th, td {
-    text-align: left;
-}
 
 .info-album{
     display: flex;
@@ -84,6 +104,17 @@ th, td {
     margin-bottom: 25px;
     /* color: rgb(197, 194, 194); */
     color: rgb(37, 28, 163);
+}
+
+.action-btn {
+    background: white;
+    border: 0px;
+    font-size: 25px;
+    color: rgb(21, 22, 26);
+    cursor: pointer;
+    padding: 10px;
+    margin: 0px 15px;
+    margin-left: -5px;
 }
 
 </style>

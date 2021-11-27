@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="form-group">
-                            <b-button @click="submitSaveArtist" class="btnsubmitSaveArtist">SAVE CHANGE</b-button>
+                            <b-button v-on:click="submitSaveArtist" class="btnsubmitSaveArtist">SAVE CHANGE</b-button>
                         </div>
                     </form>
                 </div>
@@ -51,6 +51,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
+import { updateArtist, getArtistDetail } from "@/services/ApiServices.js"
 
 export default {
     name: 'EditArtist',
@@ -62,16 +63,17 @@ export default {
         return {
             artist: {
                 name: '',
-                selectedImg: null,
+                image: '',
                 dob: '',
                 description: ''
-            }        
+            }
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/artists/");
+        const id = this.$route.params.id;
+        const result = await getArtistDetail(id);
         console.warn(result);
-        this.artists = result.data;
+        this.artist = result.data;
     },
     methods: {
         selectedImg(event) {
@@ -80,8 +82,17 @@ export default {
         selectedAudio(event) {
             console.log(event);
         },
-        submitSaveArtist() {
-
+        async submitSaveArtist() {
+            // const artists = {
+            //     name: this.artist.name,
+            //     image: this.artist.image,
+            //     dob: this.artist.dob,
+            //     description: this.artist.description
+            // }
+            const id = this.$route.params.id;
+            const response = await updateArtist(id,this.artist);
+            const {data} = response;
+            alter('Update successful!')
         }
     }
 }

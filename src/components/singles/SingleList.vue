@@ -13,7 +13,7 @@
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
-                        <input type="text" placeholder="Search here ..."  class="search-bar">
+                        <input type="text" placeholder=" Search here ..."  class="search-bar">
                     </div>
                 </div>
 
@@ -29,13 +29,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="single in singles" :key="single.songid">
-                            <td scope="row">{{single.songid}}</td>               
-                            <td>{{single.namesong}}</td>
-                            <td>{{single.imgsong}}</td>
-                            <td>{{single.artistName}}</td>
+                        <tr v-for="single in singles" :key="single._id">
+                            <td scope="row">{{single._id}}</td>               
+                            <td>{{single.name}}</td>
+                            <td>{{single.image}}</td>
+                            <td>{{single.artistID.name}}</td>
                             <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editsingle', params: {id: single.songid} }">
+                                <router-link :to="{name: 'editsingle', params: {id: single._id} }">
                                     <b-button class="btn btnEdit">EDIT</b-button>
                                 </router-link>
                                 <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
@@ -52,6 +52,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
+import { getAllSingles } from "@/services/ApiServices.js"
 
 export default {
     name:'SingleList',
@@ -61,24 +62,13 @@ export default {
     },
     data() {
         return {
-            artistName: null,
             singles: []
         }
     },
     async mounted() {
-        axios
-            .get('http://localhost:3000/singles')
-            .then(response => {
-                this.singles = response.data;
-            axios 
-                .get("http://localhost:3000/artists?embed=singles&id=" + response.data[0].artistID)
-                .then( resq =>{
-                    this.artistName = resq.data[0].name_a;
-                    console.log(this.artistName);
-            });
-
-            })
-            .catch(error => console.log(error))
+        const result = await getAllSingles();
+        console.warn(result);
+        this.singles = result.data;
 
     }
 }

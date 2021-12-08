@@ -31,12 +31,16 @@
                         <tr v-for="artist in artists" :key="artist._id">
                             <td scope="row">{{artist._id}}</td>               
                             <td>{{artist.name}}</td>
-                            <td>{{artist.image}}</td>
+                            <td>image</td>
+                            <!-- <td>{{artist.image}}</td> -->
                             <td style="display: flex; justify-content: center;">
                                 <router-link :to="{name: 'editartist', params: {id: artist._id} }">
                                     <b-button class="btn btnEdit">EDIT</b-button>
                                 </router-link>
-                                <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            v-bind:value="artist._id"
+                                            v-on:click="removeArtist">DELETE</b-button>
                             </td>
                         </tr>     
                     </tbody>
@@ -50,7 +54,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
-import { getAllArtists } from "@/services/ApiServices.js"
+import { getAllArtists, deleteArtist } from "@/services/ApiServices.js"
 
 export default {
     name:'ArtistList',
@@ -60,13 +64,28 @@ export default {
     },
     data() {
         return {
-            artists: []
+            artists: [],
+            id_del: ''
         }
     },
     async mounted() {
         const result = await getAllArtists();
         console.warn(result);
         this.artists = result.data;
+    },
+    methods: {
+        async removeArtist($event) {
+            this.id_del = $event.currentTarget.value
+            console.log("result:",this.id_del)
+            const id = this.id_del
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deleteArtist(id)
+            if(result1.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>

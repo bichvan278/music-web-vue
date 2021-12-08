@@ -21,7 +21,7 @@
                 <table class="table" style=" margin-top: 30px;"> 
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">POSTE BY</th>
                             <th scope="col">NAME SONG</th>
                             <th scope="col">IMG</th>
                             <th scope="col">SINGER</th>
@@ -30,7 +30,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="single in singles" :key="single._id">
-                            <td scope="row">{{single._id}}</td>               
+                            <td scope="row">{{single.postBy.username}}</td>               
                             <td>{{single.name}}</td>
                             <td>{{single.image}}</td>
                             <td>{{single.artistID.name}}</td>
@@ -38,7 +38,10 @@
                                 <router-link :to="{name: 'editsingle', params: {id: single._id} }">
                                     <b-button class="btn btnEdit">EDIT</b-button>
                                 </router-link>
-                                <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            v-bind:value="single._id"
+                                            v-on:click="removeSingle">DELETE</b-button>
                             </td>
                         </tr>     
                     </tbody>
@@ -52,7 +55,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
-import { getAllSingles } from "@/services/ApiServices.js"
+import { getAllSingles, deleteSingle } from "@/services/ApiServices.js"
 
 export default {
     name:'SingleList',
@@ -62,7 +65,8 @@ export default {
     },
     data() {
         return {
-            singles: []
+            singles: [],
+            id_del: ''
         }
     },
     async mounted() {
@@ -70,6 +74,20 @@ export default {
         console.warn(result);
         this.singles = result.data;
 
+    },
+    methods: {
+        async removeSingle($event) {
+            this.id_del = $event.currentTarget.value
+            console.log("result:",this.id_del)
+            const id = this.id_del
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deleteSingle(id)
+            if(result1.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>

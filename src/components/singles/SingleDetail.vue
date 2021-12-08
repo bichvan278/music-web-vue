@@ -5,55 +5,75 @@
             <search-bar></search-bar>
         </div>
         <!-- Display detail of single view -->
-        <div class="view-detail" style="margin-top: 130px;">
+        <div class="view-detail" style="margin-top: 100px;">
             <div class="container">
                 <div class="row">
+                    <div class="col-md-1"></div>
                     <!-- Imagine single detail -->
-                    <div class="col-md-9">
+                    <div class="col-md-10" style="display: grid;">
                         <div class="main-view">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="view-img" style="margin-left: 50px;">
+                                        <img src="./../../assets/img/music.jpg" class="img-single"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="view-audio">
+                                        <div class="head-title">
+                                            <h3 class="text-title" style="margin-left: 140px; width: 170px;"><span>{{single.name}}</span></h3>
+                                        </div>
+                                        <div class="view-nav">
+                                            <router-link :to="{name: 'artistdetail', params: {id: single.artistID._id}}" class="name-art" style="text-decoration: none;">
+                                                <p class="name-art">{{single.artistID.name}}</p>
+                                            </router-link>
+                                        </div>
+                                        <!-- Button music player -->
+                                        <div class="navigation">
+                                            <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
+                                            <button class="action-btn" id="play">
+                                                <i class="far fa-play-circle" style="font-size: 45px;"></i>
+                                            </button>
+                                            <button class="action-btn" id="next"><i class="fas fa-forward"></i></button>
+                                        </div>
+                                        <!-- Music time bar -->
+                                        <div class="progress_time">
+                                            <span class="current_time">0:00</span>
+                                            <span class="total_time">4:00</span>
+                                        </div>
+                                        <div class="progress_bar" @click="clickProgress">
+                                            <div class="progress_current"  :style="{ width: progress_bar + '%' }"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Comment Class -->
+                        <div class="row cmt-content" style="display: grid;">
                             <div class="head-title">
-                                <h3 class="text-title"><span>{{single.name}}</span></h3>
+                                <h4 class="text-page"><span>comment</span></h4>
                             </div>
-                            <div class="view-audio">
-                                <div class="view-img">
-                                    <img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" class="img-single"/>
-                                </div>
-                                <div class="view-nav">
-                                    <router-link :to="{name: 'artist'}" class="name-art" style="text-decoration: none;">
-                                        <p class="name-art">{{single.artistID.name}}</p>
-                                    </router-link>
-                                    <!-- Button music player -->
-                                    <div class="navigation" style="margin-left: 9px;">
-                                        <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
-                                        <button class="action-btn" id="play">
-                                            <i class="far fa-play-circle" style="font-size: 45px;"></i>
-                                        </button>
-                                        <button class="action-btn" id="next"><i class="fas fa-forward"></i></button>
+                            <div class="cmt-class">
+                                <form action="#" class="cmt-form" @submit.prevent="submitCmt">
+                                    <div class="media g-mb-30 media-comment">
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
+                                            style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
+                                        <div class="g-mb-15">
+                                            <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">user name</h5>
+                                        </div>
+                                        <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="Comment here . . ."></b-textarea>
+                                        <button type="submit" value="POST" class="btnCmt">POST</button>
+                                        </div>
                                     </div>
-                                    <!-- Music time bar -->
-                                    <div class="progress_time">
-                                        <span class="current_time">0:00</span>
-                                        <span class="total_time">4:00</span>
-                                    </div>
-                                    <div class="progress_bar" @click="clickProgress">
-                                        <div class="progress_current"  :style="{ width: progress_bar + '%' }"></div>
-                                    </div>
-                                </div>
+                                </form>
+                                <single-cmt v-for="comment in comments" :key="comment._id" :comment="comment"></single-cmt>
                             </div>
-                            <!-- Comment HTML-->
-                            <!-- <single-cmt></single-cmt> -->
+                            
                         </div>
                     </div>
-
-                    <!-- List other single of this artist -->
-                    <div class="col-md-3">
-                        <!-- <h2 class="content-title1">playing</h2>
-                        <hr>
-                        <div class="small-list" v-for="item in singles" :key="item.artistID">
-                            <h4>{{item.namesong}}</h4>
-                            <router-link :to="{name: 'artist'}" class="art-name1"><p>{{artistName}}</p></router-link>
-                        </div> -->
-                    </div>
+                    <!-- End Main Content -->
+                    <div class="col-md-1"></div>
                 </div>
             </div>
         </div>
@@ -66,15 +86,15 @@ import HeaderComp from "@/components/partial/HeaderComp.vue"
 import SingleCmt from "@/components/singles/SingleCmt.vue"
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
-import { getSingleDetail } from "@/services/ApiServices.js"
+import { getSingleDetail, getAllCommentinSingle } from "@/services/ApiServices.js"
 
 export default {
     name: 'SingleDetail',
     components: {
         HeaderComp,
-        SingleCmt,
         FooterComp,
-        SearchBar
+        SearchBar,
+        SingleCmt
     },
     data() {
         return {
@@ -82,7 +102,8 @@ export default {
                 name: null,
                 artistID: null,
                 audio: null
-            }
+            },
+            comments: []
         }
     },
     async mounted() {
@@ -90,16 +111,105 @@ export default {
         const result = await getSingleDetail(id);
         console.warn(result);
         this.single = result.data;
+
+        const result1 = await getAllCommentinSingle(id);
+        console.warn(result1);
+        this.comments = result1.data.allCmt;
+    },
+    methods: {
+        async submitCmt() {
+            
+        }
     }
 }
 </script>
 
 <style>
+.cmt-content {
+    margin-top: 20px;
+}
+.cmt-class {
+    margin-left: 165px;
+    margin-top: -70px;
+    width: 600px;
+    height: 200px;
+}
+.btnCmt {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(37, 28, 163);
+}
 
+.content-title1 {
+    line-height: 0.7em;
+    text-align: left;
+    font-size: 45px;
+    color: slategrey;
+    visibility: inherit;
+}
+
+@media (min-width: 0) {
+    .g-mr-15 {
+        margin-right: 1.07143rem !important;
+    }
+}
+@media (min-width: 0){
+    .g-mt-3 {
+        margin-top: 0.21429rem !important;
+    }
+}
+
+.g-mb-15 {
+    margin-top: -25px;
+    display: inline-block;
+}
+
+.g-height-50 {
+    height: 50px;
+}
+
+.g-width-50 {
+    width: 50px !important;
+}
+
+@media (min-width: 0){
+    .g-pa-30 {
+        padding: 2.14286rem !important;
+    }
+}
+
+/* .g-bg-secondary {
+    background-color: #fafafa !important;
+} */
+
+.u-shadow-v18 {
+    box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+}
+
+.g-color-gray-dark-v4 {
+    color: #777 !important;
+}
+
+.g-font-size-12 {
+    font-size: 0.85714rem !important;
+}
+
+.media-comment {
+    margin-top:20px
+}
+/* END CSS OF COMMENT */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+.main-view {
+    border: 2px ;
+    height: 350px;
+    display: grid;
+    background-color: black;
 }
 
 .text-title {
@@ -110,41 +220,49 @@ body {
 }
 
 .img-single {
-    width: 180px;
-    height: 180px;
+    width: 300px;
+    height: 300px;
 }
 
 .view-nav {
     align-items: center;
     margin-left: 140px;
+    margin-top: -20px;
 }
 
 .name-art {
     text-align: center;
     font-size: 35px;
     color: rgb(37, 28, 163);
+    width: 170px;
+    margin-left: -20px;
 }
 
 .navigation {
     align-items: center;
     justify-content: center;
+    margin-left: 25px;
+    display: flex;
 }
 
 .action-btn {
-    background: white;
+    background: black;
     border: 0px;
     font-size: 25px;
-    color: rgb(21, 22, 26);
+    /* background-image: linear-gradient(125deg,#ffff,#064497); */
+    color: white;;
     cursor: pointer;
     padding: 10px;
     margin: 0px 15px;
 }
 
 .view-audio {
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
     flex-direction: row;
-    margin-top: -30px;
+    margin-top: 35px;
+    justify-content: flex-start;
+    margin-left: -30px;
 }
 
 .btn-heart {
@@ -175,7 +293,7 @@ body {
 .progress_bar {
 	width: 100%;
     height: 1.5px;
-	background-color: rgba(81, 81, 82, 0.322);
+	background-color: whitesmoke;;
 	margin:0.75rem 0;
 }
 

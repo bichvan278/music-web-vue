@@ -1,33 +1,41 @@
 <template>
     <div class="content">
-        <div class="head-title">
-            <h1 class="text-page"><span>register</span></h1>
-        </div>
-        <div class="container" style=" margin-top: -50px; ">
-            <div class="row">
+        <header-comp></header-comp>
+        <div class="container" style=" margin-top: 110px; ">
+            <div class="head-title">
+                <h1 class="text-page"><span>register</span></h1>
+            </div>
+            <div class="row" style="margin-top: -40px">
                 <div class="col-md-4"></div>
-
                 <div class="col-md-4">
-                    <!-- Default form login -->
-                    <h2 class="res-title">TAKE IT RIGHT NOW</h2>
-                        <form>
+                    <!-- Default form sign up -->
+                    <h3 class="res-title">TAKE IT RIGHT NOW</h3>
+                        <form @submit.prevent="submitSignup">
                             <div class="form-group">
-                                <input type="text" name="email" v-model="email" placeholder="Email" class="form-control form-control-lg" />
+                                <input required="true" type="text" name="fullname" v-model="user.fullname" placeholder="Fullname" class="form-control form-control-lg" />
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="phone" v-model="phone" placeholder="Phone" class="form-control form-control-lg" />
+                                <input required="true" type="text" name="email" v-model="user.email" placeholder="Email" class="form-control form-control-lg" />
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="username" v-model="username" placeholder="Username" class="form-control form-control-lg" />
+                                <input required="true" type="text" name="phone" v-model="user.phone" placeholder="Phone" class="form-control form-control-lg" />
                             </div>
 
                             <div class="form-group">
-                                <input type="password" name="password" v-model="password" placeholder="Password" class="form-control form-control-lg" />
+                                <input required="true" type="text" name="username" v-model="user.username" placeholder="Username" class="form-control form-control-lg" />
                             </div>
 
-                            <button type="submit" class="btn-reg" v-on:click="register()">Register</button>
+                            <div class="form-group">
+                                <input required="true" type="password" name="password" v-model="user.password" placeholder="Password" class="form-control form-control-lg" />
+                            </div>
+
+                            <div class="form-group">
+                                <input required="true" type="hidden" name="role" v-model="role" placeholder="Member" class="form-control form-control-lg" />
+                            </div>
+
+                            <button type="submit" class="btn-reg">Register</button>
                         </form>
                             <br/>
                             
@@ -54,67 +62,48 @@
 
 <script>
 import FooterComp from './partial/FooterComp.vue'
+import HeaderComp from './partial/HeaderComp.vue'
+import {register, getMemberRole} from "@/services/ApiServices.js"
 
 export default {
     name: 'Register',
-    components: {FooterComp},
+    components: {FooterComp, HeaderComp},
     data() {
         return {
-            email: '',
-            phone: '',
-            username: '',
-            password: ''
+            user: {
+                fullname: '',
+                email: '',
+                phone: '',
+                username: '',
+                password: ''
+            },
+            role: null
         }
     },
-    // computed: {
-    //     loggedIn() {
-    //         return this.$store.state.auth.status.loggedIn;
-    //     }
-    // },
-    // mounted() {
-    //     if (this.loggedIn) {
-    //         this.$router.push('/userprofile');
-    //     }
-    // },
-    // methods: {
-    //     register() {
-    //         this.$validator.validate().then(isValid => {
-    //             if (isValid) {
-    //             this.$store.dispatch('auth/signup', this.user).then(
-    //                 res => {
-    //                     console.log(res);
-    //                     alter("Sign up is successful!")
-    //                     this.$router.push('signin')
-    //                 });
-    //             }else{
-    //                 alert("Something maybe is wrong! Check your information again!")
-    //             }
-    //         });
-    //     }
-    // }
-    methods: {
-        async register() {
-            await axios.post("http://localhost:3000/accounts",{
-                email: this.email,
-                phone: this.phone,
-                username: this.username,
-                password: this.password
-            })
-            .then(response => {
-                console.log(response);
-                if(response.status == 201){
-                    console.log(response);
-                    alert("Successful! Login right now to see more.");
-                    this.$router.push('signin');
-                }else{
-                    alert("Oops! You have a mistake!");
-                }
-            }).catch( err => {
-                console.log(err);
-            })
+    async created() {
+        const result = await getMemberRole();
+        console.warn(result);
+        this.role = result.data._id;
+    },
+    methods:{
+        async submitSignup(){
+            const fullname = this.user.fullname;
+            const email = this.user.email;
+            const phone = this.user.phone;
+            const username = this.user.username;
+            const password = this.user.password;
+            const role = this.role;
+
+            const response = await register(fullname, email, phone, username, password, role);
+            console.warn(response);
+            if(response.status === 201){
+                alert("Register is completely!")
+                this.$router.replace({ name: 'signin' });
+            }else{
+                alert("Try again!")
+            }
         }
     }
-
 }
 </script>
 

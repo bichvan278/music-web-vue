@@ -32,13 +32,17 @@
                         <tr v-for="album in albums" :key="album._id">
                             <td scope="row">{{album._id}}</td>               
                             <td>{{album.name}}</td>
-                            <td>{{album.image}}</td>
+                            <td>image</td>
+                            <!-- <td>{{album.image}}</td> -->
                             <td>{{album.alBofArtist.name}}</td>
                             <td style="display: flex; justify-content: center;">
                                 <router-link :to="{name: 'editalbum', params: {id: album._id} }">
                                     <b-button class="btn btnEdit">EDIT</b-button>
                                 </router-link>
-                                <b-button class="btn btnEdit" variant="danger">DELETE</b-button>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            v-bind:value="album._id"
+                                            v-on:click="removeAlb">DELETE</b-button>
                             </td>
                         </tr>     
                     </tbody>
@@ -52,7 +56,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
-import { getAllAlbums } from "@/services/ApiServices.js"
+import { getAllAlbums, deleteAlbum } from "@/services/ApiServices.js"
 
 export default {
     name:'AlbumList',
@@ -62,13 +66,28 @@ export default {
     },
     data() {
         return {
-            albums: []
+            albums: [],
+            id_del: ''
         }
     },
     async mounted() {
         const result = await getAllAlbums();
         console.warn(result);
         this.albums = result.data;
+    },
+    methods: {
+        async removeAlb($event) {
+            this.id_del = $event.currentTarget.value
+            console.log("result:",this.id_del)
+            const id = this.id_del
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deleteAlbum(id)
+            if(result1.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>

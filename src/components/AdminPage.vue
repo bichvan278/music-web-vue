@@ -1,7 +1,12 @@
 <template>
     <div class="ad-page">
         <header-comp></header-comp>
-        <div class="container" style="margin-top: 140px;">
+        <div class="container" style="margin-top: 140px; display: grid;">
+            <div class="name-acc">
+                <router-link :to="{name: 'userprofile'}" style="text-decoration: none;">
+                    <h3 class="name-user">{{user.fullname}}</h3>
+                </router-link>
+            </div>
             <div class="head-title">
                 <h1 class="text-page"><span>admin page</span></h1>
             </div>
@@ -28,7 +33,11 @@
                                 <p class="col-title">PLAYLIST MANAGEMENT</p>
                             </router-link>
                         </b-col>
-                        <b-col><p class="col-title">STATISTICAL</p></b-col>
+                        <b-col>
+                            <router-link :to="{name:'statistical'}" class="col-title">
+                                <p class="col-title">STATISTICAL</p>
+                            </router-link>
+                        </b-col>
                     </b-row>
                 </b-container>
             </div>
@@ -40,18 +49,36 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from './partial/FooterComp.vue'
+import {getUserProfile} from "@/services/ApiServices.js"
 
 export default {
     name: 'AdminPage',
     components: {
         HeaderComp,
         FooterComp
+    },
+    data() {
+        return{
+            user: {
+                fullname: ''
+            }
+        }
+    },
+    async mounted() {
+        const result = await getUserProfile();
+        console.warn(result);
+        this.user = result.data;
     }
 
 }
 </script>
 
 <style>
+.name-user {
+    text-align: center;
+    color: black;
+}
+
 .col-title {
     text-decoration: none;
     text-align: center;

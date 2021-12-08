@@ -2,9 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HomePage from '@/components/HomePage'
 import AdminPage from '@/components/AdminPage'
+import Statistical from '@/components/Statistical'
 import SignIn from '@/components/SignIn'
 import Register from '@/components/Register'
 import ContactPage from '@/components/ContactPage'
+import SearchPage from '@/components/SearchPage'
 // Single
 import SinglePage from '@/components/singles/SinglePage'
 import SingleDetail from '@/components/singles/SingleDetail'
@@ -60,8 +62,13 @@ export default new Router({
       component: ContactPage
     },
     {
+      path: '/search',
+      name: 'search',
+      component: SearchPage
+    },
+    {
       path: '/singlepage',
-      name: 'singepage',
+      name: 'singlepage',
       component: SinglePage
     },
     {
@@ -85,7 +92,7 @@ export default new Router({
       component: EditSingle
     },
     {
-      path: '/accounts/:id',
+      path: '/accounts',
       name: 'userprofile',
       component: UserProfile
     },
@@ -140,7 +147,7 @@ export default new Router({
       component: AddPlaylist
     },
     {
-      path: '/editplaylist',
+      path: '/editplaylist/:id',
       name: 'editplaylist',
       component: EditPlaylist
     },
@@ -173,6 +180,11 @@ export default new Router({
       path: '/adminpage',
       name: 'adminpage',
       component: AdminPage
+    },
+    {
+      path: '/statistical',
+      name: 'statistical',
+      component: Statistical
     }
   ]
 });

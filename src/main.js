@@ -13,10 +13,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
 Vue.config.productionTip = false
 
 window.axios = require('axios');
+// @ts-ignore
+window.Buffer = window.Buffer || require('buffer').Buffer;
 
 /* eslint-disable no-new */
 new Vue({

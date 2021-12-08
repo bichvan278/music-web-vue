@@ -11,12 +11,13 @@
             <div class="head-title">
                 <h1 class="text-page"><span>popular</span></h1>
             </div>
-            <div class="popular-list" style="margin-top: -80px;">
+            <div class="popular-list" style="margin-top: -80px; margin-left: 46px">
                 <section>
                     <div class="cards">
                         <single-card  v-for="single in singles" :key="single._id" :single="single"></single-card>
                     </div>
                 </section>
+                <router-link :to="{name: 'singlepage'}" style="text-decoration: none;"><h3 class="see-more">see more . . .</h3></router-link>
             </div>
         </div>
         <!-- End body -->
@@ -51,12 +52,17 @@ export default {
     async mounted() {
         const result = await getAllSingles();
         console.warn(result);
-        this.singles = result.data;
+        this.singles = result.data.slice(0,4);
     }
 }
 </script>
 
 <style scoped>
+.see-more {
+    text-align: center;
+    font-size: 22px;
+    color: rgb(37, 28, 163);
+}
 
 .body-content {
     margin-top: 620px;

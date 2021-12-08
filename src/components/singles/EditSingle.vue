@@ -10,15 +10,18 @@
                 <!-- Form add new single -->
                 <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
                     <h2 style="text-align: center">EDIT SINGLE</h2>
-                    <form action="" class="frmEditsingle">
+                    <form action="" class="frmEditsingle" @submit.prevent="submitSaveSingle">
 
                         <div class="form-group">
+                            <label for="name">Name:</label>
                             <input type="text" v-model="single.name" placeholder="Name song" class="form-group">
                         </div>
 
                         <!-- Selection Artist Dropdown -->
                         <div class="form-group">
-                            <select v-model="single.artist" class="form-group">
+                            <label for="artistID">Artist:</label>
+                            <select class="form-group">
+                                <option value="artistID">{{single.artistID.name}}</option>
                                 <option value="Artist" v-for="artist in artists" :key="artist._id">{{artist.name}}</option>
                             </select>
                         </div>
@@ -40,7 +43,7 @@
                         </div>
 
                         <div class="form-group">
-                            <b-button @click="submitSaveSingle" class="btnSavesingle">SAVE CHANGE</b-button>
+                            <b-button type="submit" class="btnSavesingle">SAVE CHANGE</b-button>
                         </div>
                     </form>
                 </div>
@@ -55,7 +58,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { getAllArtists } from "@/services/ApiServices.js"
+import { updateSingle, getSingleDetail, getAllArtists } from "@/services/ApiServices.js"
 
 export default {
     name: 'EditSingle',
@@ -66,7 +69,8 @@ export default {
     data() {
         return {
             single: {
-                namesong: '',
+                name: '',
+                artistID: '',
                 selectedImg: null,
                 selectedAudio: null
             },
@@ -77,6 +81,11 @@ export default {
         const result = await getAllArtists();
         console.warn(result);
         this.artists = result.data;
+
+        const id = this.$route.params.id
+        const result1 = await getSingleDetail(id);
+        console.warn(result1);
+        this.single = result1.data;
     },
     methods: {
         selectedImg(event) {
@@ -85,8 +94,16 @@ export default {
         selectedAudio(event) {
             console.log(event);
         },
-        submitSaveSingle() {
-
+        async submitSaveSingle() {
+            let name = this.single.name;
+            let image = this.single.selectedImg;
+            let audio = this.single.selectedAudio;
+            
+            const id = this.$route.params.id;
+            const response = await updateSingle(id, name, image, audio);
+            const {data} = response;
+            alert("Update successful!")
+            this.$router.replace({ name: 'singlelist' });
         }
     }
 }

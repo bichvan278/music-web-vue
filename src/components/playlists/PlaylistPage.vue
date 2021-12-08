@@ -25,14 +25,14 @@ import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
 import PlaylistCard from './PlaylistCard.vue'
-import { getAllPlaylists } from "@/services/ApiServices.js"
+import { getAllPlaylists, searchPlaylist } from "@/services/ApiServices.js"
 
 export default {
     name: 'PlaylistPage',
     components: { HeaderComp, SearchBar, FooterComp, PlaylistCard },
     data() {
         return {
-            playlists: [],
+            playlists: []
         }
     },
     async mounted() {

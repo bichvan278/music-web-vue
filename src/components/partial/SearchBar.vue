@@ -4,15 +4,43 @@
             <h3 class="s-text">search here</h3>
         </div>
         <div class="s-bar">
-            <input type="text" value placeholder="  find something about music..." class="b-search">
-            <button type="submit" class="btn-search">search</button>
+            <input  type="text" 
+                    value placeholder="  find something about music..." 
+                    class="b-search"
+                    v-model="search">
+            <button type="submit" class="btn-search" @click="submittoSearch">search</button>
         </div>
     </div>
 </template>
 
 <script>
+import { searchPlaylist } from "@/services/ApiServices.js"
+
 export default {
-    name: 'SearchBar'
+    name: 'SearchBar',
+    data() {
+        return {
+            search: ''
+        }
+    },
+    methods: {
+        async submittoSearch(value) {
+            // console.log(this.search)
+            const route = { path: '/search', query: {name: this.search}}
+            this.$router.push(route)
+            // const result = await searchPlaylist(name);
+            // console.log("Search: ",result);
+            console.log(route.query.name)
+        }
+    }
+    // watch: {
+    //     '$route.query.name': {
+    //         immediate: true,
+    //         handler(value){
+    //             this.search = value
+    //         }
+    //     }
+    // }
 }
 </script>
 

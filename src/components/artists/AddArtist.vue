@@ -11,13 +11,14 @@
                 <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
                     <h2 style="text-align: center">ADD NEW ARTIST</h2>
 
-                    <form action="" class="frmAddartist">
+                    <form action="" class="frmAddartist" @submit.prevent="submitArtist" enctype="multipart/form-data">
                         <div class="form-group">
                             <input type="text" v-model="artist.name" placeholder="Name Artist" class="form-group">
                         </div>
 
                         <!-- Upload image artist -->
                         <div class="form-group">
+                            <label for="">Image:</label>
                             <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group">
                             <!-- <div v-if="previewImg">
                                 <div>
@@ -27,15 +28,17 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="dob">Date of birth:</label>
                             <input type="date" v-model="artist.dob" placeholder="Date of birth" class="form-group">
                         </div>
 
                         <div class="form-group">
+                            <label for="description">Description:</label>
                             <textarea type="text" v-model="artist.description" placeholder="Description about artist" class="form-group"></textarea>
                         </div>
 
                         <div class="form-group">
-                            <b-button @click="submitArtist" class="btnsubmitArtist">ADD ARTIST</b-button>
+                            <b-button type="submit" class="btnsubmitArtist">ADD ARTIST</b-button>
                         </div>
                     </form>
                 </div>
@@ -50,6 +53,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
+import {createArtist} from "@/services/ApiServices.js"
 
 export default {
     name: 'AddArtist',
@@ -61,26 +65,35 @@ export default {
         return {
             artist: {
                 name: '',
-                selectedImg: null,
                 dob: '',
                 description: ''
-            }        
+            },
+            file: ''        
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/artists/");
-        console.warn(result);
-        this.artists = result.data;
+    
     },
     methods: {
         selectedImg(event) {
-            this.selectedImg = event.target.files[0];
+            const file = this.$refs.file.files[0];
+            this.file = file;
         },
-        selectedAudio(event) {
-            console.log(event);
-        },
-        submitArtist() {
+        async submitArtist() {
+            let name = this.artist.name;
+            let image = new FormData();
+            image.append("file", this.file);
+            let dob = this.artist.dob;
+            let description = this.artist.description;
 
+            const response = await createArtist(name, image, dob, description);
+            const {data} = response;
+            if(response.status === 201){
+                alert("Added a new artist.")
+                this.$router.replace({ name: 'artistlist' });
+            }else{
+                alert("Sth maybe wrong!")
+            }
         }
     }
 }
@@ -88,12 +101,12 @@ export default {
 
 <style scoped>
 .btnsubmitArtist {
-    margin-left: 90px;
+    margin-left: 120px;
     background-color: white;
     color: black;
 }
 .btnsubmitArtist:hover {
-    margin-left: 90px;
+    margin-left: 120px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);
 }

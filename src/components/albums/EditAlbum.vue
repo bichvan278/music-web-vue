@@ -11,14 +11,17 @@
                 <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
                     <h2 style="text-align: center">EDIT ALBUM</h2>
 
-                    <form action="" class="frmEditalbum">
+                    <form action="" class="frmEditalbum" @submit.prevent="submitSaveAlbum">
                         <div class="form-group">
+                            <label for="name">Name:</label>
                             <input type="text" v-model="album.name" placeholder="Name album" class="form-group">
                         </div>
 
                         <!-- Selection Artist Dropdown -->
                         <div class="form-group">
-                            <select v-model="album.artist" class="form-group">
+                            <label for="alBofArtist">Artist:</label>
+                            <select class="form-group">
+                                <option value="alBofArtist">{{album.alBofArtist.name}}</option>
                                 <option value="Artist" v-for="artist in artists" :key="artist._id">{{artist.name}}</option>
                             </select>
                         </div>
@@ -36,7 +39,7 @@
                         </div>
 
                         <div class="form-group">
-                            <b-button @click="submitSaveAlbum" class="btnsubmitSaveAlbum">SAVE CHANGE</b-button>
+                            <b-button type="submit" class="btnsubmitSaveAlbum">SAVE CHANGE</b-button>
                         </div>
                     </form>
                 </div>
@@ -63,7 +66,7 @@ export default {
         return {
             album: {
                 name: '',
-                artist: '',
+                alBofArtist: '',
                 image: ''
             },
             artists: []
@@ -78,6 +81,12 @@ export default {
         const result1 = await getAlbumDetail(id);
         console.warn(result1);
         this.album = result1.data;
+        // Decode Image
+        // const dataImg = this.album.image;
+        // const decodeImg = toString(dataImg);
+        // console.log(decodeImg)
+        // const decodeImg = dataImg.join();
+        // console.log("String image:", decodeImg)
     },
     methods: {
         // selectedImg(event) {
@@ -87,7 +96,14 @@ export default {
         //     console.log(event);
         // },
         async submitSaveAlbum() {
-
+            let name = this.album.name;
+            let image = this.album.image;
+            
+            const id = this.$route.params.id;
+            const response = await updateAlbum(id,name,image);
+            const {data} = response;
+            alert("Update successful!");
+            this.$router.replace({ name: 'albumlist' });
         }
     }
 }
@@ -100,7 +116,7 @@ export default {
     color: black;
 }
 .btnsubmitSaveAlbum:hover {
-    margin-left: 105px;
+    margin-left: 55px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);
 }

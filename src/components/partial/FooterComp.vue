@@ -1,5 +1,5 @@
 <template>
-<div class="footer-page">
+<div class="footer-page1" style="margin-top: 100px;">
     <div class="pb-0 mb-0 justify-content-center text-light footer-page">
         <footer>
             <div class="row my-5 justify-content-center py-5">
@@ -63,12 +63,13 @@ export default {
 
     .footer-page {
         overflow: hidden;
-        margin-top: 250px;
         background: black;
         color: #627482 !important;
         margin-bottom: 0;
         padding-bottom: 0;
         font-family: 'Rubik', sans-serif;
+        width: fit-content;
+        height: 350px;
     }
 
     small {

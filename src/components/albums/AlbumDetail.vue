@@ -14,34 +14,42 @@
                         <div class="head-title">
                             <h3 class="text-user"><span>{{album.name}}</span></h3>
                         </div>
-                        <p class="edit-pro">{{album.alBofArtist.name}}</p>
-                        <p class="edit-pro">{{album.release}}</p>
+                        <router-link :to="{name: 'artistdetail', params:{id: album.alBofArtist._id}}"  class="edit-pro" style="text-decoration: none">
+                            <p class="edit-pro">{{album.alBofArtist.name}}</p>
+                        </router-link>
+                        <p class="edit-pro1">{{album.release}}</p>
                         <!-- <router-link :to="{name: 'editalbum'}" style="color: gray;">
                             <p class="edit-pro" style="color: gray;">EDIT ALBUM <i class="far fa-edit"></i></p>
                         </router-link> -->
                     </div>
                 </div>
                 <!-- Show singles in this album -->
-                <table class="table" style=" margin-top: 30px;"> 
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">NAME SONG</th>
-                            <th scope="col">ARTIST</th>
-                            <th scope="col">PLAY</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="single in singlesinalb" :key="single._id">
-                            <td scope="row">{{single.singleInAlb[0].name}}</td>
-                            <td>{{album.alBofArtist.name}}</td>
-                            <td style="display: flex; justify-content: left;">
-                                <button class="action-btn" id="play">
-                                    <i class="far fa-play-circle" style="font-size: 25px;"></i>
-                                </button>
-                            </td>
-                        </tr>     
-                    </tbody>
-                </table>
+                <div v-if="singlesinalb.length > 0">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">NAME SONG</th>
+                                <th scope="col">ARTIST</th>
+                                <th scope="col">PLAY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="single in singlesinalb" :key="single._id">
+                                <td scope="row">{{single.name}}</td>
+                                <td>{{album.alBofArtist.name}}</td>
+                                <td style="display: flex; justify-content: left;">
+                                    <button class="action-btn" id="play">
+                                        <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                    </button>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else style="display: grid; justify-content: center;">
+                    <img src="./../../assets/img/song.png" alt="" class="no-song">
+                    <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                </div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -74,8 +82,9 @@ export default {
         this.album = result.data;
 
         const result1 = await getAllSinglesinAlbum(id);
-        console.warn(result1);
-        this.singlesinalb = result1.data;
+        console.warn(result1.data.getAllsingles[0].singleInAlb);
+        this.singlesinalb = result1.data.getAllsingles[0].singleInAlb;
+
     }
 }
 </script>
@@ -102,8 +111,19 @@ export default {
     text-align: center;
     font-size: 60px;
     margin-bottom: 25px;
+    margin-top: 25px;
     /* color: rgb(197, 194, 194); */
     color: rgb(37, 28, 163);
+}
+
+.edit-pro {
+    font-size: 20px;
+    color: rgb(121, 157, 235);
+}
+
+.edit-pro:hover {
+    font-size: 20px;
+    color: rgb(60, 61, 63);
 }
 
 .action-btn {
@@ -116,5 +136,9 @@ export default {
     margin: 0px 15px;
     margin-left: -5px;
 }
-
+.no-song{
+    width: 250px;
+    height: 250px;
+    margin: 50px;
+}
 </style>

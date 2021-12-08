@@ -11,8 +11,9 @@
                 <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
                     <h2 style="text-align: center">EDIT ARTIST</h2>
 
-                    <form action="" class="frmEditartist">
+                    <form action="" class="frmEditartist" @submit.prevent="submitSaveArtist">
                         <div class="form-group">
+                            <label for="name">Name:</label>
                             <input type="text" v-model="artist.name" placeholder="Name Artist" class="form-group">
                         </div>
 
@@ -28,15 +29,17 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="dob">Date of birth:</label>
                             <input type="date" v-model="artist.dob" placeholder="Date of birth" class="form-group">
                         </div>
 
                         <div class="form-group">
+                            <label for="description">Description:</label>
                             <textarea type="text" v-model="artist.description" placeholder="Description about artist" class="form-group"></textarea>
                         </div>
 
                         <div class="form-group">
-                            <b-button v-on:click="submitSaveArtist" class="btnsubmitSaveArtist">SAVE CHANGE</b-button>
+                            <b-button type="submit" class="btnsubmitSaveArtist">SAVE CHANGE</b-button>
                         </div>
                     </form>
                 </div>
@@ -66,7 +69,8 @@ export default {
                 image: '',
                 dob: '',
                 description: ''
-            }
+            },
+            file: ''
         }
     },
     async mounted() {
@@ -77,22 +81,20 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            this.selectedImg = event.target.files[0];
-        },
-        selectedAudio(event) {
-            console.log(event);
+            // const file = this.$refs.file.files[0];
+            // this.file = file;
         },
         async submitSaveArtist() {
-            // const artists = {
-            //     name: this.artist.name,
-            //     image: this.artist.image,
-            //     dob: this.artist.dob,
-            //     description: this.artist.description
-            // }
+            let name = this.artist.name;
+            let image = this.artist.image;
+            let dob = this.artist.dob;
+            let description = this.artist.description;
+            
             const id = this.$route.params.id;
-            const response = await updateArtist(id,this.artist);
+            const response = await updateArtist(id, name, image, dob, description);
             const {data} = response;
-            alter('Update successful!')
+            alert("Update successful!")
+            this.$router.replace({ name: 'artistlist' });
         }
     }
 }

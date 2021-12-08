@@ -1,5 +1,7 @@
 <template>
-    <div class="container">
+<div class="log-in">
+    <header-comp></header-comp>
+    <div class="container" style="margin-top: 130px">
         <div class="row">
             <div class="col-md-6">
                 <div class="head-title">
@@ -16,49 +18,46 @@
             <div class="col-md-6" style=" margin-top: 40px; ">
                 <!-- Default form login -->
                 <h2>SIGN IN</h2>
-                    <form>
+                    <form @submit.prevent="signin">
                         <div class="form-group">
-                            <input  type="text" name="username" v-model="username" autocomplete="off" 
+                            <input  type="text" id="username" v-model="username" autocomplete="off" 
                                     placeholder="Username" class="form-control form-control-lg" />
                         </div>
 
                         <div class="form-group">
-                            <input  type="password" name="password" v-model="password" autocomplete="off" 
+                            <input  type="password" id="password" v-model="password" autocomplete="off" 
                                     placeholder="Password" class="form-control form-control-lg" />
                         </div>
 
-                        <button type="submit" v-on:click="signin()" class="btn btn-dark btn-lg btn-block">Sign In</button>
+                        <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
                     </form>
                     <!-- End form login -->
-                        <br/>
-                        
-                        <p class="text1">Don't have an account?
-                            <router-link class="btn1" :to="{name: 'register'}">Register</router-link>
-                        </p>
-                        <br>
-                        <!-- <p class="text1">See more your profile
-                            <router-link :to="{name: 'adminpage'}" class="btn1">Admin Page</router-link>
-                        </p> -->
-
-                        <div class="social-icons">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-google"></i></a></li>
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            </ul>
-                        </div>
+                    <br/>
+                    
+                    <p class="text1">Don't have an account?
+                        <router-link class="btn1" :to="{name: 'register'}">Register</router-link>
+                    </p>
+                    <br>
+                    
+                    <div class="social-icons">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-google"></i></a></li>
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        </ul>
+                    </div>
             </div>
         </div>
-        <footer-comp></footer-comp>
     </div>
+</div>
 </template>
 
 <script>
-import FooterComp from './partial/FooterComp.vue'
+import HeaderComp from "@/components/partial/HeaderComp.vue"
 import {login} from "@/services/ApiServices.js"
 
 export default {
-    components: {FooterComp},
+    components: {HeaderComp},
     name: "SignIn",
     data() {
         return {
@@ -71,16 +70,16 @@ export default {
             const username = this.username;
             const password = this.password;
             if(username===""){
-                console.log("Tên đăng nhập không được rỗng!")
+                alert("Tên đăng nhập không được rỗng!")
             }else if(password===""){
-                console.log("Mật khẩu không được rỗng!")
+                alert("Mật khẩu không được rỗng!")
             }else{
                 const response = await login(username, password);
                 const data = response.data;
-                console.log(data)
-                if (data.user) {
+                console.log(response);
+                if (data.userLogin) {
                     localStorage.setItem("token", data.token);
-                    localStorage.setItem("user", JSON.stringify(data.user));
+                    localStorage.setItem("user", JSON.stringify(data.userLogin));
                     localStorage.setItem("role", JSON.stringify(data.role))
                     console.log(data.user)
                     const role = await data.role.name;
@@ -95,15 +94,6 @@ export default {
                 }
 
             }
-            // const result = await login();
-            // if(result.status == 200) {
-            //     localStorage.setItem('user',JSON.stringify(result.data));
-            //     alert("Login is successful");
-            //     this.$router.push('userprofile');
-            // }else{
-            //     alert("Failure! Login again!")
-            // }
-            
         }
     }
 }

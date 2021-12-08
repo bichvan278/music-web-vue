@@ -7,38 +7,41 @@
             </div>
             <div class="row">
                 <div class="col-md-3"></div>
-                <!-- Form add new single -->
+                <!-- Form add new album -->
                 <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
                     <h2 style="text-align: center">ADD NEW ALBUM</h2>
 
-                    <form action="" class="frmAddalbum">
+                    <form action="" class="frmAddalbum" @submit.prevent="submitAlbum">
                         <div class="form-group">
-                            <input type="text" v-model="single.namesong" placeholder="Name album" class="form-group">
+                            <input type="text" v-model="album.name" placeholder="Name album" class="form-group">
                         </div>
 
                         <!-- Selection Artist Dropdown -->
                         <div class="form-group">
-                            <select v-model="single.artist" class="form-group">
-                                <option value="Artist" v-for="artist in artists" :key="artist.id">{{artist.name_a}}</option>
+                            <label for="alBofArtist">Artist:</label>
+                            <select class="form-group" @change="selectedObj">
+                                <option aria-placeholder="Select Artist" 
+                                        v-bind:value="artist._id" 
+                                        v-for="artist in artists" :key="artist._id">{{artist.name}}
+                                </option>
                             </select>
                         </div>
                         
-                        <!-- Upload image single -->
+                        <!-- Upload image album -->
                         <div class="form-group">
-                            <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group">
-                            <!-- <div v-if="previewImg">
-                                <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: 50px; height: 50px;"/>
-                                </div>
-                            </div> -->
+                            <label for="">Image:</label>
+                            <input type="file" @change="selectedImg" accept="image" class="form-group">
+                            <div v-if="previewImg.length > 0">
+                                    <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: 250px; height: 250px;"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
-                            <b-button @click="submitAlbum" class="btnsubmitAlbum">ADD ALBUM</b-button>
+                            <b-button type="submit" class="btnsubmitAlbum">ADD ALBUM</b-button>
                         </div>
                     </form>
                 </div>
-                <!-- End form add new single -->
+                <!-- End form add new album -->
                 <div class="col-md-3"></div>
             </div>
         </div>
@@ -49,6 +52,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
+import { getAllArtists, createAlbum } from "@/services/ApiServices.js"
 
 export default {
     name: 'AddAlbum',
@@ -58,29 +62,41 @@ export default {
     },
     data() {
         return {
-            single: {
-                namesong: '',
-                artist: '',
-                selectedImg: null,
-                selectedAudio: null
+            album: {
+                name: '',
+                alBofArtist: ''
             },
+            selectedImgFile: null,
+            previewImg: "",
             artists: []
         }
     },
     async mounted() {
-        const result = await axios.get("http://localhost:3000/artists/");
+        const result = await getAllArtists();
         console.warn(result);
         this.artists = result.data;
     },
     methods: {
         selectedImg(event) {
-            this.selectedImg = event.target.files[0];
+            this.selectedImgFile = event.target.files[0];
+            console.log("image alb:",this.selectedImgFile)
         },
-        selectedAudio(event) {
-            console.log(event);
+        selectedObj(e) {
+            this.album.alBofArtist = e.target.options[e.target.options.selectedIndex].value;
+            console.log("choose:", this.album.alBofArtist);
         },
-        submitAlbum() {
+        async submitAlbum() {
+            let name = this.album.name;
+            let alBofArtist = this.album.alBofArtist;
+            let image = btoa(this.selectedImgFile);
 
+            const response = await createAlbum(name, alBofArtist, image);
+            if(response.status === 201){
+                alter("Add album successful ^^ !!!")
+            }
+            else{
+                alter("Try again!")
+            }
         }
     }
 }
@@ -88,12 +104,12 @@ export default {
 
 <style scoped>
 .btnsubmitAlbum {
-    margin-left: 90px;
+    margin-left: 120px;
     background-color: white;
     color: black;
 }
 .btnsubmitAlbum:hover {
-    margin-left: 90px;
+    margin-left: 120px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);
 }

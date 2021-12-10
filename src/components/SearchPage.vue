@@ -18,7 +18,7 @@
                     </section>
                 </div>
                 <!-- Single -->
-                <div class="popular-list" style="margin-top: -80px;" v-else-if="singles">
+                <div class="popular-list2" style="margin-top: -80px;" v-if="singles">
                     <section>
                         <div class="cards">
                             <single-card v-for="single in singles" :key="single._id" :single="single"></single-card>
@@ -26,7 +26,7 @@
                     </section>
                 </div>
                 <!-- Artist -->
-                <div class="popular-list" style="margin-top: -80px;" v-else-if="artists">
+                <div class="popular-list3" style="margin-top: -80px;" v-if="artists">
                     <section>
                         <div class="cards">
                             <artist-card  v-for="artist in artists" :key="artist._id" :artist="artist"></artist-card>
@@ -34,7 +34,7 @@
                     </section>
                 </div>
                 <!-- Album -->
-                <div class="popular-list" style="margin-top: -80px;" v-else>
+                <div class="popular-list4" style="margin-top: -80px;" v-else>
                     <section>
                         <div class="cards">
                             <album-card  v-for="album in albums" :key="album._id" :album="album"></album-card>

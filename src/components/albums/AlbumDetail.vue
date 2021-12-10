@@ -18,9 +18,11 @@
                             <p class="edit-pro">{{album.alBofArtist.name}}</p>
                         </router-link>
                         <p class="edit-pro1">{{album.release}}</p>
-                        <!-- <router-link :to="{name: 'editalbum'}" style="color: gray;">
-                            <p class="edit-pro" style="color: gray;">EDIT ALBUM <i class="far fa-edit"></i></p>
-                        </router-link> -->
+                        <div v-if="role === 'Admin' ">
+                            <router-link :to="{name: 'editalbum', params: {id: album._id} }" style="color: gray;">
+                                <p class="edit-pro" style="color: gray;">EDIT ALBUM <i class="far fa-edit"></i></p>
+                            </router-link>
+                        </div>
                     </div>
                 </div>
                 <!-- Show singles in this album -->
@@ -46,7 +48,22 @@
                         </tbody>
                     </table>
                 </div>
-                <div v-else style="display: grid; justify-content: center;">
+                <!-- For Watcher + User -->
+                <div v-if="singlesinalb.length === 0" style="display: grid; justify-content: center; margin-top: 20px;">
+                    <img src="./../../assets/img/song.png" alt="" class="no-song">
+                    <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                </div>
+                <!-- For Admin -->
+                <div v-if=" singlesinalb.length > 0 && role === 'Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
+                    <router-link :to="{name: 'addsingleinalbum'}" style="text-decoration: none;">
+                        <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
+                    </router-link>
+                </div>
+                <!-- For Admin with no single -->
+                <div v-if=" singlesinalb.length === 0  && role === 'Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
+                    <router-link :to="{name: 'addsingleinalbum'}" style="text-decoration: none;">
+                        <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
+                    </router-link>
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
                     <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
                 </div>
@@ -59,7 +76,7 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
-import { getAlbumDetail, getAllSinglesinAlbum} from "@/services/ApiServices.js"
+import { getAlbumDetail, getAllSinglesinAlbum, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'AlbumDetial',
@@ -72,7 +89,8 @@ export default {
                 alBofArtist: null,
                 realese: null
             },
-            singlesinalb: []
+            singlesinalb: [],
+            role: null
         }
     },
     async mounted() {
@@ -85,6 +103,11 @@ export default {
         console.warn(result1.data.getAllsingles[0].singleInAlb);
         this.singlesinalb = result1.data.getAllsingles[0].singleInAlb;
 
+    },
+    async created() {
+        const result2 = await getUserProfile();
+        this.role = result2.data.role.name;
+        console.log("role:", this.role);
     }
 }
 </script>
@@ -102,8 +125,8 @@ export default {
 }
 
 .img-album{
-    width: 200px;
-    height: 200px;
+    width: 265px;
+    height: 265px;
 }
 
 .text-user {
@@ -140,5 +163,15 @@ export default {
     width: 250px;
     height: 250px;
     margin: 50px;
+}
+.content-title1{
+    color: rgb(37, 28, 163);
+    margin-top: 20px;
+    text-align: center;
+}
+.content-title1:hover {
+    color: rgb(121, 157, 235);
+    margin-top: 20px;
+    text-align: center;
 }
 </style>

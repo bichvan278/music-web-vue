@@ -103,6 +103,9 @@ export default {
                 artistID: null,
                 audio: null
             },
+            user: {
+                name: ''
+            },
             comments: []
         }
     },

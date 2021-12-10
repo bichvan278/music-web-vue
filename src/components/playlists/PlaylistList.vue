@@ -31,7 +31,12 @@
                     <tbody>
                         <tr v-for=" playlist in playlists" :key="playlist._id" v-bind:value="playlist._id">
                             <td scope="row">{{playlist._id}}</td>               
-                            <td>{{playlist.name}}</td>
+                            <td>
+                                <router-link    :to="{name: 'playlistdetail', params: {id: playlist._id} }"
+                                                style="text-decoration: none;">
+                                    <p>{{playlist.name}}</p>
+                                </router-link>
+                            </td>
                             <td>image</td>
                             <td>{{playlist.createdBy.username}}</td>
                             <td style="display: flex; justify-content: center;">

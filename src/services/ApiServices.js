@@ -116,6 +116,10 @@ export const createPlaylist = async (name, image) => (
     await instance.post('/playlist/newPlaylist',{name, image})
 );
 
+export const addSingleinPlaylist = async (singleIn, ofPlaylist) => (
+    await instance.post('/playlist/addSingleintoPlaylist',{singleIn, ofPlaylist})
+);
+
 export const getAllPlaylists = async () => (
     await instance.get('/allPlaylists')
 );
@@ -144,6 +148,10 @@ export const deletePlaylist = async (id) => (
     await instance.delete(`/playlist/deletePlaylist/${id}`)
 );
 
+export const delSingleinPlaylist = async (id_play, id_del) => (
+    await instance.delete(`/playlist/${id_play}/deleteSingleinPlaylist/${id_del}`)
+);
+
 // ALBUM
 export const searchAlbum = async (name) => (
     await instance.get(`/findAlbum?name=${name}`)
@@ -151,6 +159,10 @@ export const searchAlbum = async (name) => (
 
 export const createAlbum = async (name, alBofArtist, image) => (
     await instance.post('/album/newAlbum',{name, alBofArtist, image})
+);
+
+export const addSingleinAlbum = async (singleInAlb, ofAlbum) => (
+    await instance.post('/album/addSingleintoAlbum',{singleInAlb, ofAlbum})
 );
 
 export const getAllAlbums = async () => (
@@ -180,4 +192,8 @@ export const deleteAlbum = async (id) => (
 // COMMENT
 export const getAllCommentinSingle = async (id) => (
     await instance.get(`/allComments/single/${id}`)
+);
+
+export const createComment = async (content, cmtofSingle) => (
+    await instance.post('/comment/addCmt',{content, cmtofSingle})
 );

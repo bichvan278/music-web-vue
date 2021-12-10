@@ -93,6 +93,7 @@ export default {
             const response = await createAlbum(name, alBofArtist, image);
             if(response.status === 201){
                 alter("Add album successful ^^ !!!")
+                this.$router.replace({ name: 'albumlist' });
             }
             else{
                 alter("Try again!")

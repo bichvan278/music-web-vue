@@ -26,12 +26,14 @@ import EditArtist from '@/components/artists/EditArtist'
 import AlbumPage from '@/components/albums/AlbumPage'
 import AlbumDetail from '@/components/albums/AlbumDetail'
 import AlbumList from '@/components/albums/AlbumList'
+import AlbumSingle from '@/components/albums/AlbumSingle'
 import AddAlbum from '@/components/albums/AddAlbum'
 import EditAlbum from '@/components/albums/EditAlbum'
 // Playlist
 import PlaylistPage from '@/components/playlists/PlaylistPage'
 import PlaylistDetail from '@/components/playlists/PlaylistDetail'
 import PlaylistList from '@/components/playlists/PlaylistList'
+import PlaylistSingle from '@/components/playlists/PlaylistSingle'
 import AddPlaylist from '@/components/playlists/AddPlaylist'
 import EditPlaylist from '@/components/playlists/EditPlaylist'
 
@@ -147,6 +149,11 @@ export default new Router({
       component: AddPlaylist
     },
     {
+      path: '/addsingleinplaylist',
+      name: 'addsingleinplaylist',
+      component: PlaylistSingle
+    },
+    {
       path: '/editplaylist/:id',
       name: 'editplaylist',
       component: EditPlaylist
@@ -170,6 +177,11 @@ export default new Router({
       path: '/addalbum',
       name: 'addalbum',
       component: AddAlbum
+    },
+    {
+      path: '/addsingleinalbum',
+      name: 'addsingleinalbum',
+      component: AlbumSingle
     },
     {
       path: '/editalbum/:id',

@@ -30,8 +30,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="album in albums" :key="album._id">
-                            <td scope="row">{{album._id}}</td>               
-                            <td>{{album.name}}</td>
+                            <td scope="row">{{album._id}}</td>
+                            <td>
+                                <router-link    :to="{name: 'albumdetail', 
+                                                params: {id: album._id} }"
+                                                style="text-decoration: none;">               
+                                    <p>{{album.name}}</p>
+                                </router-link>
+                            </td>
                             <td>image</td>
                             <!-- <td>{{album.image}}</td> -->
                             <td>{{album.alBofArtist.name}}</td>

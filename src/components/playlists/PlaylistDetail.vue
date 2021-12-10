@@ -19,9 +19,11 @@
                             <h3 class="text-user"><span>{{playlist.name}}</span></h3>
                         </div>
                         <p class="edit-pro">CREATE BY {{playlist.createdBy.username}}</p>
-                        <router-link :to="{name: 'editplaylist', params: {id: playlist._id}}" style="color: gray;">
-                            <p class="edit-pro" style="color: gray;">EDIT PLAYLIST <i class="far fa-edit"></i></p>
-                        </router-link>
+                        <div v-if="role !== null">
+                            <router-link :to="{name: 'editplaylist', params: {id: playlist._id}}" style="color: gray;">
+                                <p class="edit-pro" style="color: gray;">EDIT PLAYLIST <i class="far fa-edit"></i></p>
+                            </router-link>
+                        </div>
                     </div>
                 </div>
                 <!-- Show singles in this PLAYLIST -->
@@ -32,6 +34,7 @@
                                 <th scope="col">NAME SONG</th>
                                 <th scope="col">ARTIST</th>
                                 <th scope="col">PLAY</th>
+                                <th scope="col" v-if="role !== null">DELETE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,13 +46,36 @@
                                         <i class="far fa-play-circle" style="font-size: 25px;"></i>
                                     </button>
                                 </td>
+                                <td v-if="role !== null">
+                                    <button class="action-btn" 
+                                            id="delete"
+                                            v-bind:value="single._id"
+                                            v-on:click="removeSingleinPlaylist">
+                                        <i class="fas fa-trash-alt" style="font-size: 25px;"></i>
+                                    </button>
+                                </td>
                             </tr>     
                         </tbody>
                     </table>
                 </div>
-                <div v-else style="display: grid; justify-content: center;">
+                <!-- Layout if no song in playlist -->
+                <div v-if="singlesinplay.length === 0 && role === null" style="display: grid; justify-content: center;">
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
                     <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                </div>
+                <!-- For Member and Admin with no song in playlist -->
+                <div v-if=" singlesinplay.length === 0  && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
+                    <router-link :to="{name: 'addsingleinplaylist'}" style="text-decoration: none;">
+                        <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
+                    </router-link>
+                    <img src="./../../assets/img/song.png" alt="" class="no-song">
+                    <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                </div>
+                <!-- For Member and Admin want to add more song -->
+                <div v-if=" singlesinplay.length > 0 && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
+                    <router-link :to="{name: 'addsingleinplaylist'}" style="text-decoration: none;">
+                        <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -60,7 +86,7 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
-import { getPlaylistDetail, getAllSinglesinPlaylist } from "@/services/ApiServices.js"
+import { getPlaylistDetail, getAllSinglesinPlaylist, getUserProfile, delSingleinPlaylist } from "@/services/ApiServices.js"
 
 export default {
     name: 'PlaylistDetial',
@@ -70,10 +96,13 @@ export default {
             playlist: {
                 name: null,
                 username: null,
-                image: ''
+                image: null
             },
             singlesinplay: [],
-            imagePlay: null
+            imagePlay: null,
+            role: null,
+            id_del: '',
+            id_play: ''
         }
     },
     async mounted() {
@@ -89,6 +118,30 @@ export default {
         const result2 = await getAllSinglesinPlaylist(id);
         console.warn(result2.data.getAllsingles[0].singleIn);
         this.singlesinplay = result2.data.getAllsingles[0].singleIn;
+    },
+    async created() {
+        const result3 = await getUserProfile();
+        this.role = result3.data.role.name;
+        console.log("role:", this.role);
+    },
+    methods: {
+        async removeSingleinPlaylist($event){
+            this.id_del = $event.currentTarget.value
+            console.log("result:",this.id_del)
+            const id_del = this.id_del
+
+            this.id_play = this.$route.params.id
+            const id_play = this.id_play
+            
+            console.log("id_play:",this.id_play)
+            alert("Are you sure to remove it?")
+        
+            const result1 = await delSingleinPlaylist(id_play, id_del)
+            if(result1.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>
@@ -131,10 +184,21 @@ th, td {
     margin: 0px 15px;
     margin-left: -5px;
 }
-
 .no-song{
     width: 250px;
     height: 250px;
     margin: 50px;
+}
+.content-title1{
+    color: rgb(37, 28, 163);
+    margin-top: 20px;
+    margin-left: 10px;
+    text-align: center;
+}
+.content-title1:hover {
+    color: rgb(121, 157, 235);
+    margin-top: 20px;
+    margin-left: 10px;
+    text-align: center;
 }
 </style>

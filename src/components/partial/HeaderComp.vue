@@ -139,6 +139,8 @@ export default {
     methods: {
         async submitLogout() {
             await logout();
+            localStorage.removeItem('user');
+            localStorage.removeItem('role');
             this.$router.replace({ name: 'signin' });
         }
     }

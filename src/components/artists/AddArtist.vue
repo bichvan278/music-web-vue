@@ -2,29 +2,19 @@
     <div class="add-artist">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 130px;">
-            <div class="head-title">
-                <h1 class="text-page"><span>add artist</span></h1>
-            </div>
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="head-title">
+                        <h1 class="text-page"><span>add artist</span></h1>
+                    </div>
+                </div>
                 <!-- Form add new playlist -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
+                <div class="col-md-6" style="display: grid; justify-content: center;">
                     <h2 style="text-align: center">ADD NEW ARTIST</h2>
 
                     <form action="" class="frmAddartist" @submit.prevent="submitArtist" enctype="multipart/form-data">
                         <div class="form-group">
                             <input type="text" v-model="artist.name" placeholder="Name Artist" class="form-group">
-                        </div>
-
-                        <!-- Upload image artist -->
-                        <div class="form-group">
-                            <label for="">Image:</label>
-                            <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group">
-                            <!-- <div v-if="previewImg">
-                                <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: 50px; height: 50px;"/>
-                                </div>
-                            </div> -->
                         </div>
 
                         <div class="form-group">
@@ -37,13 +27,23 @@
                             <textarea type="text" v-model="artist.description" placeholder="Description about artist" class="form-group"></textarea>
                         </div>
 
+                        <!-- Upload image artist -->
+                        <div class="form-group">
+                            <label for="">Image:</label>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="previewImg.length > 0">
+                                <div>
+                                    <img class="preview my-3" :src="previewImg" alt="" style="width: fit-content; height: 50px;"/>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <b-button type="submit" class="btnsubmitArtist">ADD ARTIST</b-button>
                         </div>
                     </form>
                 </div>
                 <!-- End form add new playlist -->
-                <div class="col-md-3"></div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -68,7 +68,8 @@ export default {
                 dob: '',
                 description: ''
             },
-            file: ''        
+            image: null,
+            previewImg: ""        
         }
     },
     async mounted() {
@@ -76,13 +77,19 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            const file = this.$refs.file.files[0];
-            this.file = file;
+            this.image = event.target.files[0]
+            console.log("image", this.image)
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.previewImg = e.target.result;
+                }
+                reader.readAsDataURL(this.image);
         },
         async submitArtist() {
             let name = this.artist.name;
-            let image = new FormData();
-            image.append("file", this.file);
+            // let image = new FormData();
+            // image.append("image", this.image);
+            let image = btoa(this.image);
             let dob = this.artist.dob;
             let description = this.artist.description;
 

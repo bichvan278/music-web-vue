@@ -2,13 +2,14 @@
     <div class="add-album">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 130px;">
-            <div class="head-title">
-                <h1 class="text-page"><span>add album</span></h1>
-            </div>
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="head-title">
+                        <h1 class="text-page"><span>add album</span></h1>
+                    </div>
+                </div>
                 <!-- Form add new album -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 0px;">
                     <h2 style="text-align: center">ADD NEW ALBUM</h2>
 
                     <form action="" class="frmAddalbum" @submit.prevent="submitAlbum">
@@ -30,7 +31,7 @@
                         <!-- Upload image album -->
                         <div class="form-group">
                             <label for="">Image:</label>
-                            <input type="file" @change="selectedImg" accept="image" class="form-group">
+                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
                             <div v-if="previewImg.length > 0">
                                     <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: 250px; height: 250px;"/>
                             </div>
@@ -42,7 +43,6 @@
                     </form>
                 </div>
                 <!-- End form add new album -->
-                <div class="col-md-3"></div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -80,6 +80,11 @@ export default {
         selectedImg(event) {
             this.selectedImgFile = event.target.files[0];
             console.log("image alb:",this.selectedImgFile)
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.previewImg = e.target.result;
+                }
+            reader.readAsDataURL(this.selectedImgFile);
         },
         selectedObj(e) {
             this.album.alBofArtist = e.target.options[e.target.options.selectedIndex].value;

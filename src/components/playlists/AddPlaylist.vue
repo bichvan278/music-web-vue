@@ -2,13 +2,14 @@
     <div class="add-playlist">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 130px;">
-            <div class="head-title">
-                <h1 class="text-page"><span>add playlist</span></h1>
-            </div>
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="head-title">
+                        <h1 class="text-page"><span>add playlist</span></h1>
+                    </div>
+                </div>
                 <!-- Form add new playlist -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 0px;">
                     <h2 style="text-align: center">ADD NEW PLAYLIST</h2>
 
                     <form action="" class="frmAddplaylist" @submit.prevent="submitPlaylist" enctype="multipart/form-data">
@@ -21,7 +22,7 @@
                             <label for="image">Image:</label>
                             <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
                             <div v-if=" previewImg.length>0 ">
-                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: 150px; height: 150px;"/>
+                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
@@ -31,7 +32,6 @@
                     </form>
                 </div>
                 <!-- End form add new playlist -->
-                <div class="col-md-3"></div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -56,7 +56,6 @@ export default {
             },
             image: null,
             previewImg: "",
-            strImg: ""
         }
     },
     async mounted() {
@@ -96,7 +95,6 @@ export default {
             // let image = new FormData();
             // image.append('image',this.image.name);
             let name = this.playlist.name;
-            // let strImg = btoa(this.image)
             let image = btoa(this.image);
 
             const response = await createPlaylist(name, image);

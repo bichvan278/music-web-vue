@@ -63,7 +63,7 @@ export const getSingleofOwner = async () => (
 );
 
 export const updateSingle = async (id, name, image, audio) => (
-    await instance.patch(`/singles/${id}`,{name, image, audio})
+    await instance.patch(`/singles/${id}`,{name, artistID, image, audio})
 );
 
 export const deleteSingle = async (id) => (
@@ -181,8 +181,8 @@ export const getAllSinglesinAlbum = async (id) => (
     await instance.get(`/album/getAllSinglesinAlbum/${id}`)
 );
 
-export const updateAlbum = async (id, name, image) => (
-    await instance.patch(`/album/${id}`,{name, image})
+export const updateAlbum = async (id, name, alBofArtist, image) => (
+    await instance.patch(`/album/${id}`,{name, alBofArtist, image})
 );
 
 export const deleteAlbum = async (id) => (

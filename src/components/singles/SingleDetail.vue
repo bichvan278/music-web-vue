@@ -62,14 +62,19 @@
                                         <div class="g-mb-15">
                                             <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">user name</h5>
                                         </div>
-                                        <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="Comment here . . ."></b-textarea>
+                                        <b-textarea style="font-size: 13px; margin-left: -5px;" 
+                                                    placeholder="Comment here . . ."
+                                                    v-model="comment.content"></b-textarea>
                                         <button type="submit" value="POST" class="btnCmt">POST</button>
                                         </div>
                                     </div>
                                 </form>
-                                <single-cmt v-for="comment in comments" :key="comment._id" :comment="comment"></single-cmt>
+                                <section>
+                                    <div class="all-cmt">
+                                        <single-cmt v-for="cmt in comments" :key="cmt._id" :cmt="cmt"></single-cmt>
+                                    </div>
+                                </section>
                             </div>
-                            
                         </div>
                     </div>
                     <!-- End Main Content -->
@@ -86,7 +91,7 @@ import HeaderComp from "@/components/partial/HeaderComp.vue"
 import SingleCmt from "@/components/singles/SingleCmt.vue"
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
-import { getSingleDetail, getAllCommentinSingle } from "@/services/ApiServices.js"
+import { getSingleDetail, getAllCommentinSingle, getUserProfile, createComment } from "@/services/ApiServices.js"
 
 export default {
     name: 'SingleDetail',
@@ -103,8 +108,10 @@ export default {
                 artistID: null,
                 audio: null
             },
-            user: {
-                name: ''
+            role: null,
+            id_sing: '',
+            comment: {
+                content: ''
             },
             comments: []
         }
@@ -118,10 +125,29 @@ export default {
         const result1 = await getAllCommentinSingle(id);
         console.warn(result1);
         this.comments = result1.data.allCmt;
+
+        const result2 = await getUserProfile();
+        console.warn(result2);
+        this.role = result2.data.role.name;
     },
     methods: {
         async submitCmt() {
-            
+            if(this.role === 'Member') {
+                this.id_sing = this.$route.params.id;
+                console.log("id single:", this.id_sing);
+                const cmtofSingle = this.id_sing;
+                const content = this.comment.content;
+                const response = await createComment(content,cmtofSingle);
+                if(response.status === 201) {
+                    alert("Your comment is saved! ")
+                    window.location.reload()
+                }else{
+                    alert("Try again!")
+                }
+            }else{
+                alert("Please SIGN IN to post your comment!")
+                this.$router.replace({ name: 'signin' });
+            }
         }
     }
 }

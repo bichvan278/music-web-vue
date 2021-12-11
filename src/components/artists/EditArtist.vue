@@ -20,12 +20,15 @@
                         <!-- Upload image artist -->
                         <div class="form-group">
                             <span>Image:</span>
-                            <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group">
-                            <!-- <div v-if="previewImg">
-                                <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: 50px; height: 50px;"/>
-                                </div>
-                            </div> -->
+                            <input type="text" v-model="artist.image" class="form-group">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Change image:</span>
+                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile"  class="form-group">
+                            <div v-if="previewImg.length > 0">
+                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -70,7 +73,8 @@ export default {
                 dob: '',
                 description: ''
             },
-            file: ''
+            previewImg: "",
+            selectedImgFile: null
         }
     },
     async mounted() {
@@ -81,12 +85,17 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            // const file = this.$refs.file.files[0];
-            // this.file = file;
+            this.selectedImgFile = event.target.files[0];
+            console.log("image alb:",this.selectedImgFile);
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.previewImg = e.target.result;
+                }
+            reader.readAsDataURL(this.selectedImgFile);
         },
         async submitSaveArtist() {
             let name = this.artist.name;
-            let image = this.artist.image;
+            let image = btoa(this.selectedImgFile);
             let dob = this.artist.dob;
             let description = this.artist.description;
             

@@ -1,25 +1,20 @@
 <template>
-    <div>
-        <form action="" class="cmt-form">
-            <div class="media g-mb-30 media-comment">
-                <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
-                <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
-                    style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
-                <div class="g-mb-15">
-                    <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">{{comment.cmtBy.fullname}}</h5>
-                </div>
-                <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="">{{comment.content}}</b-textarea>
-                <!-- <button type="submit" value="POST" class="btnCmt">POST</button> -->
-                </div>
+    <div class="media g-mb-30 media-comment">
+        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
+            style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
+            <div class="g-mb-15">
+                <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">{{cmt.cmtBy.username}}</h5>
             </div>
-        </form>
+            <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="">{{cmt.content}}</b-textarea>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     name: 'SingleCmt',
-    props: ["comment"],
+    props: ["cmt"],
     data() {
         return{
             

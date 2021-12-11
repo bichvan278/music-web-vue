@@ -20,9 +20,10 @@
                         <!-- Selection Artist Dropdown -->
                         <div class="form-group">
                             <label for="alBofArtist">Artist:</label>
-                            <select class="form-group">
+                            <select class="form-group" @change="selectedObj">
                                 <option value="alBofArtist">{{album.alBofArtist.name}}</option>
-                                <option value="Artist" v-for="artist in artists" :key="artist._id">{{artist.name}}</option>
+                                <option v-for="artist in artists" :key="artist._id"
+                                        v-bind:value="artist._id">{{artist.name}}</option>
                             </select>
                         </div>
                         
@@ -30,12 +31,14 @@
                         <div class="form-group">
                             <span>Image:</span>
                             <input type="text" v-model="album.image" class="form-group">
-                            <!-- <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group"> -->
-                            <!-- <div v-if="previewImg">
-                                <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: 50px; height: 50px;"/>
-                                </div>
-                            </div> -->
+                        </div>
+
+                        <div class="form-group">
+                            <span>Change image:</span>
+                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
+                            <div v-if="previewImg.length > 0">
+                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -69,6 +72,8 @@ export default {
                 alBofArtist: '',
                 image: ''
             },
+            previewImg: "",
+            selectedImgFile: null,
             artists: []
         }
     },
@@ -81,6 +86,7 @@ export default {
         const result1 = await getAlbumDetail(id);
         console.warn(result1);
         this.album = result1.data;
+        this.album.image = atob(result1.data.image);
         // Decode Image
         // const dataImg = this.album.image;
         // const decodeImg = toString(dataImg);
@@ -89,18 +95,26 @@ export default {
         // console.log("String image:", decodeImg)
     },
     methods: {
-        // selectedImg(event) {
-        //     this.selectedImg = event.target.files[0];
-        // },
-        // selectedAudio(event) {
-        //     console.log(event);
-        // },
+        async selectedImg(event) {
+            this.selectedImgFile = event.target.files[0];
+            console.log("image alb:",this.selectedImgFile);
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.previewImg = e.target.result;
+                }
+            reader.readAsDataURL(this.selectedImgFile);
+        },
+        selectedObj(e) {
+            this.album.alBofArtist = e.target.options[e.target.options.selectedIndex].value;
+            console.log("change artist:", this.album.alBofArtist);
+        },
         async submitSaveAlbum() {
             let name = this.album.name;
-            let image = this.album.image;
+            let alBofArtist = this.album.alBofArtist;
+            let image = btoa(this.selectedImgFile);
             
             const id = this.$route.params.id;
-            const response = await updateAlbum(id,name,image);
+            const response = await updateAlbum(id,name,alBofArtist,image);
             const {data} = response;
             alert("Update successful!");
             this.$router.replace({ name: 'albumlist' });
@@ -111,12 +125,12 @@ export default {
 
 <style scoped>
 .btnsubmitSaveAlbum {
-    margin-left: 55px;
+    margin-left: 145px;
     background-color: white;
     color: black;
 }
 .btnsubmitSaveAlbum:hover {
-    margin-left: 55px;
+    margin-left: 145px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);
 }

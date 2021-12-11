@@ -21,12 +21,14 @@
                         <div class="form-group">
                             <span>Image:</span>
                             <input type="text" v-model="playlist.image" placeholder="Image URL" class="form-group">
-                            <!-- <input type="file" @change="selectedImg" accept="image" ref="file" class="form-group"> -->
-                            <!-- <div v-if="previewImg">
-                                <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: 50px; height: 50px;"/>
-                                </div>
-                            </div> -->
+                        </div>
+                        
+                        <div class="form-group">
+                            <span>Change image:</span>
+                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
+                            <div v-if="previewImg.length > 0">
+                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -57,9 +59,10 @@ export default {
         return {
             playlist: {
                 name: '',
-                image: '',
-                selectedImg: null
-            }        
+                image: ''
+            },
+            previewImg: "",
+            selectedImgFile: null        
         }
     },
     async mounted() {
@@ -70,11 +73,17 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            this.selectedImg = event.target.files[0];
+            this.selectedImgFile = event.target.files[0];
+            console.log("image alb:",this.selectedImgFile);
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.previewImg = e.target.result;
+                }
+            reader.readAsDataURL(this.selectedImgFile);
         },
         async submitSavePlaylist() {
             let name = this.playlist.name;
-            let image = this.playlist.image;
+            let image = btoa(this.selectedImgFile);
             
             const id = this.$route.params.id;
             const response = await updatePlaylist(id,name,image);

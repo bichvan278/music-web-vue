@@ -13,12 +13,12 @@
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
-                        <input type="text" placeholder="Search here ..."  class="search-bar">
+                        <input type="text" placeholder="Search here ..."  class="search-bar" v-model="search" @keyup="submittoSearch">
                     </div>
                 </div>
 
                 <!-- List of all playlists -->
-                <table class="table" style=" margin-top: 30px;"> 
+                <table class="table" style=" margin-top: 30px;" v-if="search ==='' "> 
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">ID</th>
@@ -29,7 +29,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for=" playlist in playlists" :key="playlist._id" v-bind:value="playlist._id">
+                        <tr v-for=" playlist in playlists" :key="playlist._id">
+                            <td scope="row">{{playlist._id}}</td>               
+                            <td>
+                                <router-link    :to="{name: 'playlistdetail', params: {id: playlist._id} }"
+                                                style="text-decoration: none;">
+                                    <p>{{playlist.name}}</p>
+                                </router-link>
+                            </td>
+                            <td>image</td>
+                            <td>{{playlist.createdBy.username}}</td>
+                            <td style="display: flex; justify-content: center;">
+                                <router-link :to="{name: 'editplaylist', params: {id: playlist._id} }">
+                                    <b-button class="btn btnEdit">EDIT</b-button>
+                                </router-link>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger" 
+                                            v-bind:value="playlist._id" 
+                                            v-on:click="removePlaylist($event)">DELETE</b-button>
+                            </td>
+                        </tr>     
+                    </tbody>
+                </table>
+                <!-- Render result of search playlist -->
+                <table class="table" style=" margin-top: 30px;" v-else> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">NAME PLAYLIST</th>
+                            <th scope="col">IMG</th>
+                            <th scope="col">CREATED BY</th>
+                            <th scope="col">EDIT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for=" playlist in playlistofSearch" :key="playlist._id">
                             <td scope="row">{{playlist._id}}</td>               
                             <td>
                                 <router-link    :to="{name: 'playlistdetail', params: {id: playlist._id} }"
@@ -71,7 +105,9 @@ export default {
     data() {
         return {
             playlists: [],
-            id_del: ''
+            id_del: '',
+            playlistofSearch: [],
+            search: ''
         }
     },
     async mounted() {
@@ -90,6 +126,16 @@ export default {
             if(result1.status === 200) {
                 window.location.reload();
                 // this.$router.replace({ name: 'playlistlist' });
+            }
+        },
+        async submittoSearch() {
+            console.log("search:",this.search)
+            if(this.search !== ''){
+                this.playlistofSearch = this.playlists.filter((playlist)=>{
+                    return playlist.name.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }else{
+                this.playlistofSearch = this.playlists;
             }
         }
     }

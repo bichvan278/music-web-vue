@@ -28,7 +28,7 @@
                                 value placeholder="  find single..." 
                                 class="b-search"
                                 v-model="search">
-                        <button type="submit" class="btn-search" @click="submittoSearch">search</button>
+                        <button type="submit" class="btn-search" v-on:click="submittoSearch">search</button>
                     </div>
                 </div>
                 <!-- Result Search -->
@@ -44,7 +44,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singles" :key="single._id">
+                            <tr v-for="single in singleofSearch" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
                                 <td>{{single.image}}</td>
@@ -78,7 +78,8 @@ export default {
             singles: [],
             singleIn: '',
             ofPlaylist: '',
-            role: null
+            role: null,
+            singleofSearch: []
         }
     },
     async created() {
@@ -97,12 +98,13 @@ export default {
     },
     methods: {
         async submittoSearch() {
+            console.log("search:",this.search)
             if(this.search){
-                return this.singles.filter((single)=>{
-                    return this.search.toLowerCase().split(' ').every(v => single.name.toLowerCase().includes(v))
+                this.singleofSearch = this.singles.filter((single)=>{
+                    return single.name.toLowerCase().includes(this.search.toLowerCase())
                 })
             }else{
-                return this.singles;
+                return false;
             }
         },
         selectedObj(e) {
@@ -127,7 +129,6 @@ export default {
             }
         }
     }
-
 }
 </script>
 

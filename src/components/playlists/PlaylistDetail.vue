@@ -73,7 +73,7 @@
                 </div>
                 <!-- For Member and Admin want to add more song -->
                 <div v-if=" singlesinplay.length > 0 && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
-                    <router-link :to="{name: 'addsingleinplaylist'}" style="text-decoration: none;">
+                    <router-link :to="{name: 'addsingleinplaylist', params: {id: playlist._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
                 </div>

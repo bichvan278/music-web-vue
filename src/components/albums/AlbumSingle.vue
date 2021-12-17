@@ -44,7 +44,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singles" :key="single._id">
+                            <tr v-for="single in singleofSearch" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
                                 <td>{{single.image}}</td>
@@ -77,7 +77,8 @@ export default {
             singles: [],
             albums: [],
             singleInAlb: '',
-            ofAlbum: ''
+            ofAlbum: '',
+            singleofSearch: []
         }
     },
     async mounted() {
@@ -91,12 +92,13 @@ export default {
     },
     methods: {
         async submittoSearch() {
+            console.log("search:",this.search)
             if(this.search){
-                return this.singles.filter((single)=>{
-                    return this.search.toLowerCase().split(' ').every(v => single.name.toLowerCase().includes(v))
+                this.singleofSearch = this.singles.filter((single)=>{
+                    return single.name.toLowerCase().includes(this.search.toLowerCase())
                 })
             }else{
-                return this.singles;
+                return false;
             }
         },
         selectedObj(e) {

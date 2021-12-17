@@ -13,12 +13,12 @@
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
-                        <input type="text" placeholder="Search here ..."  class="search-bar">
+                        <input type="text" placeholder="Search here ..."  class="search-bar" v-model="search" @keyup="submittoSearch">
                     </div>
                 </div>
 
-                <!-- List of all singles -->
-                <table class="table" style=" margin-top: 30px;"> 
+                <!-- List of all albums -->
+                <table class="table" style=" margin-top: 30px;" v-if="search ==='' "> 
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">ID</th>
@@ -30,6 +30,43 @@
                     </thead>
                     <tbody>
                         <tr v-for="album in albums" :key="album._id">
+                            <td scope="row">{{album._id}}</td>
+                            <td>
+                                <router-link    :to="{name: 'albumdetail', 
+                                                params: {id: album._id} }"
+                                                style="text-decoration: none;">               
+                                    <p>{{album.name}}</p>
+                                </router-link>
+                            </td>
+                            <td>image</td>
+                            <!-- <td>{{album.image}}</td> -->
+                            <td>{{album.alBofArtist.name}}</td>
+                            <td style="display: flex; justify-content: center;">
+                                <router-link :to="{name: 'editalbum', params: {id: album._id} }">
+                                    <b-button class="btn btnEdit">EDIT</b-button>
+                                </router-link>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            v-bind:value="album._id"
+                                            v-on:click="removeAlb">DELETE</b-button>
+                            </td>
+                        </tr>     
+                    </tbody>
+                </table>
+
+                <!-- Render result of search album -->
+                <table class="table" style=" margin-top: 30px;" v-else> 
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">NAME ALBUM</th>
+                            <th scope="col">IMG</th>
+                            <th scope="col">ARTIST</th>
+                            <th scope="col">EDIT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="album in albumofSearch" :key="album._id">
                             <td scope="row">{{album._id}}</td>
                             <td>
                                 <router-link    :to="{name: 'albumdetail', 
@@ -73,7 +110,9 @@ export default {
     data() {
         return {
             albums: [],
-            id_del: ''
+            id_del: '',
+            search: '',
+            albumofSearch: []
         }
     },
     async mounted() {
@@ -92,6 +131,16 @@ export default {
             if(result1.status === 200) {
                 window.location.reload();
                 // this.$router.replace({ name: 'playlistlist' });
+            }
+        },
+        async submittoSearch() {
+            console.log("search:",this.search)
+            if(this.search !== ''){
+                this.albumofSearch = this.albums.filter((album)=>{
+                    return album.name.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }else{
+                this.albumofSearch = this.albums;
             }
         }
     }

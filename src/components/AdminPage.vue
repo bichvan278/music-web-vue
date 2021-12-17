@@ -4,7 +4,7 @@
         <div class="container" style="margin-top: 140px; display: grid;">
             <div class="name-acc">
                 <router-link :to="{name: 'userprofile'}" style="text-decoration: none;">
-                    <h3 class="name-user">{{user.fullname}}</h3>
+                    <h3 class="name-user">Hello, {{user.fullname}}</h3>
                 </router-link>
             </div>
             <div class="head-title">

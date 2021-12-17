@@ -17,11 +17,23 @@
                         <single-card  v-for="single in singles" :key="single._id" :single="single"></single-card>
                     </div>
                 </section>
-                <router-link :to="{name: 'singlepage'}" style="text-decoration: none;"><h3 class="see-more">see more . . .</h3></router-link>
+                <router-link :to="{name: 'singlepage'}" style="text-decoration: none;">
+                    <h4 class="see-more">see more . . .</h4>
+                </router-link>
+            </div>
+            <div class="artist-slide" style="height: 450px; margin-left: 46px; margin-top: 20px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1 class="text-page"><span>top artist</span></h1>
+                    </div>
+                    <div class="col-md-6">
+                        <slide-artist></slide-artist>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- End body -->
-        <div class="footer" style="margin-top: 1000px">
+        <div class="footer" style="margin-top: 1160px">
             <footer-comp></footer-comp>
         </div>
     </div>
@@ -33,6 +45,7 @@ import FooterComp from "@/components/partial/FooterComp.vue"
 import SingleCard from "@/components/singles/SingleCard.vue"
 import SearchBar from "@/components/partial/SearchBar.vue"
 import SlideComp from "@/components/partial/SlideComp.vue"
+import SlideArtist from './partial/SlideArtist.vue'
 import { getAllSingles } from "@/services/ApiServices.js"
 
 export default {
@@ -42,7 +55,8 @@ export default {
         SingleCard,
         SearchBar,
         SlideComp,
-        FooterComp
+        FooterComp,
+        SlideArtist
     },
     data() {
         return {

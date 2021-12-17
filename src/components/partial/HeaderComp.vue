@@ -182,6 +182,17 @@ export default {
         margin-top: 2px;
         text-decoration: none;
     }
+    .btn-name:hover {
+        color: grey;
+        width: 115px;
+        margin-left: 20px;
+        margin-right: -50px;
+        font-size: 22px;
+        font-family: HindSiliguri-Bold;
+        display: block;
+        margin-top: 2px;
+        text-decoration: none;
+    }
     .btn-login, .btn-logout {
         width: 100px;
         margin-left: 20px;

@@ -7,7 +7,7 @@
         <div class="container">
             <div class="row">
                 <!-- Choose playlist -->
-                <div class="select-play" style="margin: 35px;">
+                <!-- <div class="select-play" style="margin: 35px;">
                     <div class="search-text">
                         <h3 class="s-text">choose playlist</h3>
                     </div>
@@ -17,7 +17,8 @@
                                 v-for="playlist in playlists" :key="playlist._id">{{playlist.name}}
                         </option>
                     </select>
-                </div>
+                </div> -->
+
                 <!-- Search single to add -->
                 <div class="search-bar" style="margin-top: 0px;">
                     <div class="search-text">
@@ -38,7 +39,6 @@
                             <tr>
                                 <th scope="col">POSTE BY</th>
                                 <th scope="col">NAME SONG</th>
-                                <th scope="col">IMG</th>
                                 <th scope="col">SINGER</th>
                                 <th scope="col">ADD</th>
                             </tr>
@@ -47,7 +47,36 @@
                             <tr v-for="single in singleofSearch" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
-                                <td>{{single.image}}</td>
+                                <td>{{single.artistID.name}}</td>
+                                <td style="display: flex; justify-content: left;">
+                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link> -->
+                                    <b-button   class="btn btnEdit" 
+                                                style="margin-left: 0px;"
+                                                v-bind:value="single._id"
+                                                v-on:click="addSingle">ADD</b-button>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Show all single when not search -->
+                <div v-if=" search === '' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">POSTE BY</th>
+                                <th scope="col">NAME SONG</th>
+                                <th scope="col">SINGER</th>
+                                <th scope="col">ADD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="single in singles" :key="single._id">
+                                <td scope="row">{{single.postBy.username}}</td>               
+                                <td>{{single.name}}</td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
                                     <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
@@ -95,6 +124,9 @@ export default {
         const result1 = await getPlaylistofOwner();
         console.log("playlists:",result1);
         this.playlists = result1.data;
+
+        this.ofPlaylist = this.$route.params.id
+        console.log("playlist_id:",this.ofPlaylist)
     },
     methods: {
         async submittoSearch() {
@@ -107,10 +139,10 @@ export default {
                 return false;
             }
         },
-        selectedObj(e) {
-            this.ofPlaylist = e.target.options[e.target.options.selectedIndex].value;
-            console.log("choose playlist:", this.ofPlaylist);
-        },
+        // selectedObj(e) {
+        //     this.ofPlaylist = e.target.options[e.target.options.selectedIndex].value;
+        //     console.log("choose playlist:", this.ofPlaylist);
+        // },
         async addSingle($event) {
             this.singleIn = $event.currentTarget.value;
             console.log("result:",this.singleIn);

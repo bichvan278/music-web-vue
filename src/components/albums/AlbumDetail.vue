@@ -33,15 +33,24 @@
                                 <th scope="col">NAME SONG</th>
                                 <th scope="col">ARTIST</th>
                                 <th scope="col">PLAY</th>
+                                <th scope="col" v-if="role ==='Admin' ">DELETE</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="single in singlesinalb" :key="single._id">
-                                <td scope="row">{{single.name}}</td>
+                                <td scope="row">{{single.singleInAlb[0].name}}</td>
                                 <td>{{album.alBofArtist.name}}</td>
                                 <td style="display: flex; justify-content: left;">
                                     <button class="action-btn" id="play">
                                         <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                    </button>
+                                </td>
+                                <td v-if="role ==='Admin' ">
+                                    <button class="action-btn" 
+                                            id="delete"
+                                            v-bind:value="single.singleInAlb[0]._id"
+                                            v-on:click="removeSingleinAlbum">
+                                        <i class="fas fa-trash-alt" style="font-size: 25px;"></i>
                                     </button>
                                 </td>
                             </tr>     
@@ -55,13 +64,13 @@
                 </div>
                 <!-- For Admin -->
                 <div v-if=" singlesinalb.length > 0 && role === 'Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
-                    <router-link :to="{name: 'addsingleinalbum'}" style="text-decoration: none;">
+                    <router-link :to="{name: 'addsingleinalbum', params: {id: album._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
                 </div>
                 <!-- For Admin with no single -->
                 <div v-if=" singlesinalb.length === 0  && role === 'Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
-                    <router-link :to="{name: 'addsingleinalbum'}" style="text-decoration: none;">
+                    <router-link :to="{name: 'addsingleinalbum', params: {id: album._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
@@ -76,7 +85,7 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
-import { getAlbumDetail, getAllSinglesinAlbum, getUserProfile } from "@/services/ApiServices.js"
+import { getAlbumDetail, getAllSinglesinAlbum, getUserProfile, delSingleinAlbum } from "@/services/ApiServices.js"
 
 export default {
     name: 'AlbumDetial',
@@ -84,13 +93,16 @@ export default {
     data() {
         return {
             album: {
+                _id: '',
                 image: null,
                 name: null,
                 alBofArtist: null,
                 realese: null
             },
             singlesinalb: [],
-            role: null
+            role: null,
+            id_del: '',
+            id_alb: ''
         }
     },
     async mounted() {
@@ -100,14 +112,32 @@ export default {
         this.album = result.data;
 
         const result1 = await getAllSinglesinAlbum(id);
-        console.warn(result1.data.getAllsingles[0].singleInAlb);
-        this.singlesinalb = result1.data.getAllsingles[0].singleInAlb;
+        console.warn(result1.data.getAllsingles);
+        this.singlesinalb = result1.data.getAllsingles;
 
     },
     async created() {
         const result2 = await getUserProfile();
         this.role = result2.data.role.name;
         console.log("role:", this.role);
+    },
+    methods: {
+        async removeSingleinAlbum($event) {
+            this.id_del = $event.currentTarget.value
+            console.log("id_single:",this.id_del)
+            const id_del = this.id_del
+
+            this.id_alb = this.$route.params.id
+            console.log("id_album:",this.id_alb)
+            const id_alb = this.id_alb
+            alert("Are you sure to remove it?")
+        
+            const result3 = await delSingleinAlbum(id_alb, id_del)
+            if(result3.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>

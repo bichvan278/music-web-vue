@@ -7,7 +7,7 @@
                 <div class="info-playlist">
                     <!-- Display image -->
                     <div class="img-playlist" v-if="playlist.image !== '' ">
-                        <img :src="`data:image/jpg;base64,${playlist.image}`" class="img-playlist">
+                        <img :src="`${playlist.image}`" class="img-playlist">
                     </div>
                     <div class="img-playlist" v-else>
                         <img src="./../../assets/img/music.jpg" class="img-playlist">
@@ -39,7 +39,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="single in singlesinplay" :key="single._id">
-                                <td scope="row">{{single.name}}</td>               
+                                <td scope="row">{{single.singleIn[0].name}}</td>               
                                 <td>Artist</td>
                                 <td style="display: flex; justify-content: left;">
                                     <button class="action-btn" id="play">
@@ -49,7 +49,7 @@
                                 <td v-if="role !== null">
                                     <button class="action-btn" 
                                             id="delete"
-                                            v-bind:value="single._id"
+                                            v-bind:value="single.singleIn[0]._id"
                                             v-on:click="removeSingleinPlaylist">
                                         <i class="fas fa-trash-alt" style="font-size: 25px;"></i>
                                     </button>
@@ -65,7 +65,7 @@
                 </div>
                 <!-- For Member and Admin with no song in playlist -->
                 <div v-if=" singlesinplay.length === 0  && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
-                    <router-link :to="{name: 'addsingleinplaylist'}" style="text-decoration: none;">
+                    <router-link :to="{name: 'addsingleinplaylist', params: {id: playlist._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
@@ -98,9 +98,15 @@ export default {
                 username: null,
                 image: null
             },
+            single: {
+                artistID: '',
+                singleIn: []
+            },
             singlesinplay: [],
             imagePlay: null,
             role: null,
+            id_user: null,
+            owner_play: '',
             id_del: '',
             id_play: ''
         }
@@ -110,36 +116,45 @@ export default {
         const result = await getPlaylistDetail(id);
         console.warn(result);
         this.playlist = result.data;
+        this.owner_play = result.data.createdBy._id;
+        console.log("owner_play:",this.owner_play);
 
         // Convert string to image file (no completed)
         // this.playlist.image = atob(result.data.image);
         console.log("image:", this.playlist.image)
 
         const result2 = await getAllSinglesinPlaylist(id);
-        console.warn(result2.data.getAllsingles[0].singleIn);
-        this.singlesinplay = result2.data.getAllsingles[0].singleIn;
+        console.warn(result2.data.getAllsingles);
+        this.singlesinplay = result2.data.getAllsingles;
+
     },
     async created() {
         const result3 = await getUserProfile();
         this.role = result3.data.role.name;
         console.log("role:", this.role);
+        this.id_user = result3.data._id;
+        console.log("id_user:",this.id_user);
     },
     methods: {
         async removeSingleinPlaylist($event){
-            this.id_del = $event.currentTarget.value
-            console.log("result:",this.id_del)
-            const id_del = this.id_del
+            if (this.owner_play === this.id_user) {
+                this.id_del = $event.currentTarget.value
+                console.log("result:",this.id_del)
+                const id_del = this.id_del
 
-            this.id_play = this.$route.params.id
-            const id_play = this.id_play
+                this.id_play = this.$route.params.id
+                const id_play = this.id_play
+                
+                console.log("id_play:",this.id_play)
+                alert("Are you sure to remove it?")
             
-            console.log("id_play:",this.id_play)
-            alert("Are you sure to remove it?")
-        
-            const result1 = await delSingleinPlaylist(id_play, id_del)
-            if(result1.status === 200) {
+                const result1 = await delSingleinPlaylist(id_play, id_del)
+                if(result1.status === 200) {
+                    window.location.reload();
+                }
+            } else {
+                alert("Oops! You are not owner of this playlist >.<!")
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         }
     }

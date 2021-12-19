@@ -189,6 +189,10 @@ export const deleteAlbum = async (id) => (
     await instance.delete(`/album/deleteAlbum/${id}`)
 );
 
+export const delSingleinAlbum = async (id_alb, id_del) => (
+    await instance.delete(`/album/${id_alb}/deleteSingleinAlbum/${id_del}`)
+);
+
 // COMMENT
 export const getAllCommentinSingle = async (id) => (
     await instance.get(`/allComments/single/${id}`)

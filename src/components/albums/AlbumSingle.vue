@@ -4,10 +4,10 @@
             <h2 style="text-align: center; color: rgb(178, 197, 240); font-size: 120px;"><span>single in album</span></h2>
         </div>
         <!-- Content -->
-        <div class="container" style="margin-top: -40px;">
+        <div class="container">
             <div class="row">
                 <!-- Choose album -->
-                <div class="select-alb" style="margin: 35px;">
+                <!-- <div class="select-alb" style="margin: 35px;">
                     <div class="search-text">
                         <h3 class="s-text">choose album</h3>
                     </div>
@@ -17,7 +17,8 @@
                                 v-for="album in albums" :key="album._id">{{album.name}}
                         </option>
                     </select>
-                </div>
+                </div> -->
+
                 <!-- Search single to add -->
                 <div class="search-bar" style="margin-top: 0px;">
                     <div class="search-text">
@@ -31,6 +32,7 @@
                         <button type="submit" class="btn-search" @click="submittoSearch">search</button>
                     </div>
                 </div>
+
                 <!-- Result Search -->
                 <div v-if=" search !== '' ">
                     <table class="table" style=" margin-top: 30px;"> 
@@ -45,6 +47,38 @@
                         </thead>
                         <tbody>
                             <tr v-for="single in singleofSearch" :key="single._id">
+                                <td scope="row">{{single.postBy.username}}</td>               
+                                <td>{{single.name}}</td>
+                                <td>{{single.image}}</td>
+                                <td>{{single.artistID.name}}</td>
+                                <td style="display: flex; justify-content: left;">
+                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link> -->
+                                    <b-button   class="btn btnEdit" 
+                                                style="margin-left: 0px;"
+                                                v-bind:value="single._id"
+                                                v-on:click="addSingle">ADD</b-button>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Show all single when not search -->
+                <div v-if=" search === '' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">POSTE BY</th>
+                                <th scope="col">NAME SONG</th>
+                                <th scope="col">IMG</th>
+                                <th scope="col">SINGER</th>
+                                <th scope="col">ADD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="single in singles" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
                                 <td>{{single.image}}</td>
@@ -89,6 +123,9 @@ export default {
         const result1 = await getAllAlbums();
         console.log("albums:",result1);
         this.albums = result1.data;
+
+        this.ofAlbum = this.$route.params.id;
+        console.log("alb_id:", this.ofAlbum);
     },
     methods: {
         async submittoSearch() {
@@ -101,10 +138,10 @@ export default {
                 return false;
             }
         },
-        selectedObj(e) {
-            this.ofAlbum = e.target.options[e.target.options.selectedIndex].value;
-            console.log("choose album:", this.ofAlbum);
-        },
+        // selectedObj(e) {
+        //     this.ofAlbum = e.target.options[e.target.options.selectedIndex].value;
+        //     console.log("choose album:", this.ofAlbum);
+        // },
         async addSingle($event) {
             this.singleInAlb = $event.currentTarget.value;
             console.log("result:",this.singleInAlb);

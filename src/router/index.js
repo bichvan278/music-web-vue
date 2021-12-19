@@ -149,7 +149,7 @@ export default new Router({
       component: AddPlaylist
     },
     {
-      path: '/addsingleinplaylist',
+      path: '/playlist/:id/addsingleinplaylist',
       name: 'addsingleinplaylist',
       component: PlaylistSingle
     },
@@ -179,7 +179,7 @@ export default new Router({
       component: AddAlbum
     },
     {
-      path: '/addsingleinalbum',
+      path: '/album/:id/addsingleinalbum',
       name: 'addsingleinalbum',
       component: AlbumSingle
     },

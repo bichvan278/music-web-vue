@@ -57,7 +57,10 @@
                                     <router-link :to="{name: 'editsingle', params: {id: single._id} }">
                                         <b-button class="btnEdit">EDIT</b-button>
                                     </router-link>
-                                    <b-button class="btnEdit" variant="danger">DELETE</b-button>
+                                    <b-button   class="btn btnEdit" 
+                                                variant="danger"
+                                                v-bind:value="single._id"
+                                                v-on:click="removeSingle">DELETE</b-button>
                                 </td>
                             </tr>     
                         </tbody>
@@ -89,7 +92,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue'
-import {getUserProfile, getSingleofOwner, getPlaylistofOwner} from "@/services/ApiServices.js"
+import {getUserProfile, getSingleofOwner, getPlaylistofOwner, deleteSingle} from "@/services/ApiServices.js"
 import PlaylistCard from '../playlists/PlaylistCard.vue'
 
 export default {
@@ -104,7 +107,8 @@ export default {
             user: null,
             role: null,
             singles: [],
-            playlists: []
+            playlists: [],
+            id_del: ''
         }
     },
     async created() {
@@ -121,6 +125,20 @@ export default {
         const result2 = await getPlaylistofOwner();
         console.warn(result2);
         this.playlists = result2.data;
+    },
+    methods: {
+        async removeSingle($event) {
+            this.id_del = $event.currentTarget.value
+            console.log("result:",this.id_del)
+            const id = this.id_del
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deleteSingle(id)
+            if(result1.status === 200) {
+                window.location.reload();
+                // this.$router.replace({ name: 'playlistlist' });
+            }
+        }
     }
 }
 </script>

@@ -2,13 +2,14 @@
     <div class="add-sing">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 130px;">
-            <div class="head-title">
-                <h1 class="text-page"><span>add song</span></h1>
-            </div>
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="head-title">
+                        <h1 class="text-page"><span>add song</span></h1>
+                    </div>
+                </div>
                 <!-- Form add new single -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 10px;">
                     <h2 style="text-align: center">ADD NEW SINGLE</h2>
                     <form action="" class="frmAddsingle" @submit.prevent="submitSingle">
 
@@ -38,7 +39,7 @@
                             <span>Image:</span>
                             <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
                             <div v-if="previewImg.length > 0">
-                                    <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: 250px; height: 250px;"/>
+                                    <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
                         
@@ -48,7 +49,6 @@
                     </form>
                 </div>
                 <!-- End form add new single -->
-                <div class="col-md-3"></div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -58,7 +58,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { getAllArtists,createSingle } from "@/services/ApiServices.js"
+import { getAllArtists,createSingle,getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'AddSingle',
@@ -76,7 +76,14 @@ export default {
             selectedAudioFile: null,
             previewImg: "",
             artists: [],
+            role: null
         }
+    },
+    async created() {
+        const result = await getUserProfile();
+        console.warn(result);
+        this.role = result.data.role;
+        console.log("role:",this.role);
     },
     async mounted() {
         const result = await getAllArtists();
@@ -96,7 +103,7 @@ export default {
         },
         selectedAudio(event) {
             this.selectedAudioFile = event.target.files[0];
-            console.log(event);
+            console.log("audio",this.selectedAudioFile);
         },
         selectedObj(e) {
             this.single.artistID = e.target.options[e.target.options.selectedIndex].value;
@@ -107,9 +114,9 @@ export default {
             this.selected = this.single.artistID;
             let artistID = this.selected;
             let image = btoa(this.selectedImgFile);
-            let audio = this.selectedAudioFile;
-            // let audio1 = new FormData();
-            // audio1.append('audio',this.selectedAudioFile)
+            // let audio = this.selectedAudioFile;
+            let audio = new FormData();
+            audio.append('selectedAudioFile',this.selectedAudioFile)
 
             if(image === null) {
                 alert("Upload with no image file, aren't you?")
@@ -121,7 +128,11 @@ export default {
             console.log("result:",response)
             if(response.status === 201){
                 alert("Add single successful :) !!!")
-                this.$router.replace({ name: 'userprofile' });
+                if (this.role === 'Member') {
+                    this.$router.replace({ name: 'userprofile' });
+                } else {
+                    this.$router.replace({ name: 'singlelist' });
+                }
             }else{
                 alert("Try again >< !")
             }

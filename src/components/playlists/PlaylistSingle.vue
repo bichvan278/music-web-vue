@@ -49,9 +49,6 @@
                                 <td>{{single.name}}</td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
-                                        <b-button class="btn btnEdit">EDIT</b-button>
-                                    </router-link> -->
                                     <b-button   class="btn btnEdit" 
                                                 style="margin-left: 0px;"
                                                 v-bind:value="single._id"
@@ -79,13 +76,10 @@
                                 <td>{{single.name}}</td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
-                                        <b-button class="btn btnEdit">EDIT</b-button>
-                                    </router-link> -->
                                     <b-button   class="btn btnEdit" 
-                                                style="margin-left: 0px;"
-                                                v-bind:value="single._id"
-                                                v-on:click="addSingle">ADD</b-button>
+                                        style="margin-left: 0px;"
+                                        v-bind:value="single._id"
+                                        v-on:click="addSingle">ADD</b-button>
                                 </td>
                             </tr>     
                         </tbody>
@@ -97,7 +91,7 @@
 </template>
 
 <script>
-import { getAllSingles, getPlaylistofOwner, addSingleinPlaylist, getUserProfile } from "@/services/ApiServices.js"
+import { getAllSingles, getPlaylistDetail, addSingleinPlaylist, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     data() {
@@ -108,25 +102,33 @@ export default {
             singleIn: '',
             ofPlaylist: '',
             role: null,
-            singleofSearch: []
+            singleofSearch: [],
+            owner_play: '',
+            id_user: ''
         }
     },
     async created() {
         const result3 = await getUserProfile();
         this.role = result3.data.role.name;
         console.log("role:", this.role);
+        this.id_user = result3.data._id;
+        console.log("user_id:",this.id_user);
     },
     async mounted() {
         const result = await getAllSingles();
         console.log("singles:",result);
         this.singles = result.data;
 
-        const result1 = await getPlaylistofOwner();
-        console.log("playlists:",result1);
-        this.playlists = result1.data;
+        // const result1 = await getPlaylistofOwner();
+        // console.log("playlists:",result1);
+        // this.playlists = result1.data;
 
         this.ofPlaylist = this.$route.params.id
+        const id = this.ofPlaylist;
+        const result2 = await getPlaylistDetail(id);
         console.log("playlist_id:",this.ofPlaylist)
+        this.owner_play = result2.data.createdBy._id;
+        console.log("owner_play:",this.owner_play)
     },
     methods: {
         async submittoSearch() {
@@ -144,20 +146,25 @@ export default {
         //     console.log("choose playlist:", this.ofPlaylist);
         // },
         async addSingle($event) {
-            this.singleIn = $event.currentTarget.value;
-            console.log("result:",this.singleIn);
+            if (this.id_user === this.owner_play) {
+                this.singleIn = $event.currentTarget.value;
+                console.log("result:",this.singleIn);
 
-            const singleIn = this.singleIn;
-            const ofPlaylist = this.ofPlaylist;
+                const singleIn = this.singleIn;
+                const ofPlaylist = this.ofPlaylist;
 
-            const response = await addSingleinPlaylist(singleIn, ofPlaylist);
-            console.log("send:",response)
+                const response = await addSingleinPlaylist(singleIn, ofPlaylist);
+                console.log("send:",response)
 
-            if(response.status === 201) {
-                alert("Successful ^^ !!!")
+                if(response.status === 201) {
+                    alert("Successful ^^ !!!")
+                    this.$router.replace({ name: 'playlistdetail', params: {id: this.ofPlaylist} });
+                }else{
+                    alert("Try again!")
+                }
+            } else {
+                alert("Oops! You are not owner of this playlist >.<!")
                 this.$router.replace({ name: 'playlistdetail', params: {id: this.ofPlaylist} });
-            }else{
-                alert("Try again!")
             }
         }
     }

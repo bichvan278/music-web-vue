@@ -55,7 +55,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from "@/components/partial/FooterComp.vue"
-import { getAllSingles, deleteSingle } from "@/services/ApiServices.js"
+import { getAllSingles, deleteSingle, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name:'SingleList',
@@ -66,7 +66,9 @@ export default {
     data() {
         return {
             singles: [],
-            id_del: ''
+            id_del: '',
+            owner_sing: '',
+            id_user: ''
         }
     },
     async mounted() {
@@ -74,6 +76,10 @@ export default {
         console.warn(result);
         this.singles = result.data;
 
+        const result1 = await getUserProfile();
+        console.warn(result1);
+        this.id_user = result1.data._id;
+        console.log("id_user:",this.id_user);
     },
     methods: {
         async removeSingle($event) {
@@ -82,8 +88,8 @@ export default {
             const id = this.id_del
             alert("Are you sure to remove it?")
         
-            const result1 = await deleteSingle(id)
-            if(result1.status === 200) {
+            const result2 = await deleteSingle(id)
+            if(result2.status === 200) {
                 window.location.reload();
                 // this.$router.replace({ name: 'playlistlist' });
             }

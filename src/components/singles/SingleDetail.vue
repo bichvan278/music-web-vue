@@ -71,20 +71,20 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="cmt-class" v-for="cmt in comments" :key="cmt._id">
-                                    <!-- <single-cmt v-for="cmt in comments" :key="cmt._id" :cmt="cmt"></single-cmt> -->
-                                    <div class="media g-mb-30 media-comment">
-                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
-                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
-                                            style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
-                                            <div class="g-mb-15">
-                                                <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">{{cmt.cmtBy.username}}</h5>
-                                            </div>
-                                            <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="">{{cmt.content}}</b-textarea>
-                                        </div>
-                                    </div>
-                                </div>
                             </section>
+                        </div>
+                        <div class="allcmt-class">
+                            <!-- <single-cmt v-for="cmt in comments" :key="cmt._id" :cmt="cmt"></single-cmt> -->
+                            <div class="media g-mb-30 media-comment" v-for="cmt in comments" :key="cmt._id">
+                                <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+                                <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
+                                    style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
+                                    <div class="g-mb-15">
+                                        <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">{{cmt.cmtBy.username}}</h5>
+                                    </div>
+                                    <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="">{{cmt.content}}</b-textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- End Main Content -->
@@ -133,7 +133,7 @@ export default {
 
         const result1 = await getAllCommentinSingle(id);
         console.warn(result1);
-        this.comments = result1.data.allCmt;
+        this.comments = result1.data.allCmt[0];
 
         const result2 = await getUserProfile();
         console.warn(result2);

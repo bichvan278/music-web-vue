@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <!-- Form add new single -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 0px;">
                     <!-- <h2 style="text-align: center">EDIT SINGLE</h2> -->
                     <form action="" class="frmEditsingle" @submit.prevent="submitSaveSingle">
 

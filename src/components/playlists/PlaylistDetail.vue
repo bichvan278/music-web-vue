@@ -19,10 +19,18 @@
                             <h3 class="text-user"><span>{{playlist.name}}</span></h3>
                         </div>
                         <p class="edit-pro">CREATE BY {{playlist.createdBy.username}}</p>
-                        <div v-if="role !== null">
+
+                        <div v-if="id_user === owner_play" class="class-action" style="display: flex;">
                             <router-link :to="{name: 'editplaylist', params: {id: playlist._id}}" style="color: gray;">
                                 <p class="edit-pro" style="color: gray;">EDIT PLAYLIST <i class="far fa-edit"></i></p>
                             </router-link>
+                            <div>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            style="margin-left: 10px; margin-top: -6px;" 
+                                            v-bind:value="playlist._id" 
+                                            v-on:click="removePlaylist()">DELETE</b-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,7 +42,7 @@
                                 <th scope="col">NAME SONG</th>
                                 <th scope="col">ARTIST</th>
                                 <th scope="col">PLAY</th>
-                                <th scope="col" v-if="role !== null">DELETE</th>
+                                <th scope="col" v-if="id_user === owner_play">DELETE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +54,7 @@
                                         <i class="far fa-play-circle" style="font-size: 25px;"></i>
                                     </button>
                                 </td>
-                                <td v-if="role !== null">
+                                <td v-if="id_user === owner_play">
                                     <button class="action-btn" 
                                             id="delete"
                                             v-bind:value="single.singleIn[0]._id"
@@ -64,7 +72,7 @@
                     <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
                 </div>
                 <!-- For Member and Admin with no song in playlist -->
-                <div v-if=" singlesinplay.length === 0  && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
+                <div v-if=" singlesinplay.length === 0  && id_user === owner_play" style="display: grid; justify-content: center; margin-top: 20px;">
                     <router-link :to="{name: 'addsingleinplaylist', params: {id: playlist._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
@@ -72,7 +80,7 @@
                     <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
                 </div>
                 <!-- For Member and Admin want to add more song -->
-                <div v-if=" singlesinplay.length > 0 && role !== null" style="display: grid; justify-content: center; margin-top: 20px;">
+                <div v-if=" singlesinplay.length > 0 && id_user === owner_play" style="display: grid; justify-content: center; margin-top: 20px;">
                     <router-link :to="{name: 'addsingleinplaylist', params: {id: playlist._id}}" style="text-decoration: none;">
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
@@ -86,7 +94,7 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
-import { getPlaylistDetail, getAllSinglesinPlaylist, getUserProfile, delSingleinPlaylist } from "@/services/ApiServices.js"
+import { getPlaylistDetail, getAllSinglesinPlaylist, getUserProfile, delSingleinPlaylist, deletePlaylist } from "@/services/ApiServices.js"
 
 export default {
     name: 'PlaylistDetial',
@@ -108,7 +116,8 @@ export default {
             id_user: null,
             owner_play: '',
             id_del: '',
-            id_play: ''
+            id_play: '',
+            id_del_play: ''
         }
     },
     async mounted() {
@@ -136,6 +145,24 @@ export default {
         console.log("id_user:",this.id_user);
     },
     methods: {
+        async removePlaylist() {
+            this.id_del_play = this.$route.params.id
+            console.log("result:",this.id_del_play)
+            const id = this.id_del_play
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deletePlaylist(id)
+            if(result1.status === 200) {
+                // window.location.reload();
+                if (this.role === 'Member') {
+                    this.$router.replace({ name: 'userprofile' });
+                } else {
+                    this.$router.replace({ name: 'playlistlist' });
+                }
+            }else{
+                alert("Try again!")
+            }
+        },
         async removeSingleinPlaylist($event){
             if (this.owner_play === this.id_user) {
                 this.id_del = $event.currentTarget.value
@@ -164,6 +191,11 @@ export default {
 <style>
 th, td {
     text-align: left;
+}
+
+.btnEdit {
+    margin: 5px;
+    border: 2px solid rgb(37, 28, 163);
 }
 
 .info-playlist{

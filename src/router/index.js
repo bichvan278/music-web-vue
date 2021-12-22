@@ -16,6 +16,8 @@ import EditSingle from '@/components/singles/EditSingle'
 // User
 import UserProfile from '@/components/user/UserProfile'
 import EditProfile from '@/components/user/EditProfile'
+import UserSingle from '@/components/user/UserSingle'
+import UserPlaylist from '@/components/user/UserPlaylist'
 // Artist
 import ArtistPage from '@/components/artists/ArtistPage'
 import ArtistList from '@/components/artists/ArtistList'
@@ -102,6 +104,16 @@ export default new Router({
       path: '/editprofile',
       name: 'editprofile',
       component: EditProfile
+    },
+    {
+      path: '/accounts/myallsingles',
+      name: 'myallsingles',
+      component: UserSingle
+    },
+    {
+      path: '/accounts/myallplaylists',
+      name: 'myallplaylists',
+      component: UserPlaylist
     },
     {
       path: '/artistpage',

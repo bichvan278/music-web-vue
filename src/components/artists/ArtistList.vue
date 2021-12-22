@@ -13,38 +13,71 @@
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
-                        <input type="text" placeholder="Search here ..."  class="search-bar">
+                        <input type="text" placeholder="Search here ..."  class="search-bar" v-model="search" @keyup="submittoSearch">
                     </div>
                 </div>
 
-                <!-- List of all artists -->
-                <table class="table" style=" margin-top: 30px;"> 
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">NAME ARTIST</th>
-                            <th scope="col">IMG</th>
-                            <th scope="col">EDIT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="artist in artists" :key="artist._id">
-                            <td scope="row">{{artist._id}}</td>               
-                            <td>{{artist.name}}</td>
-                            <td>image</td>
-                            <!-- <td>{{artist.image}}</td> -->
-                            <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editartist', params: {id: artist._id} }">
-                                    <b-button class="btn btnEdit">EDIT</b-button>
-                                </router-link>
-                                <b-button   class="btn btnEdit" 
-                                            variant="danger"
-                                            v-bind:value="artist._id"
-                                            v-on:click="removeArtist">DELETE</b-button>
-                            </td>
-                        </tr>     
-                    </tbody>
-                </table>
+                <!-- Display result of searching artist-->
+                <div v-if="search !=='' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">NAME ARTIST</th>
+                                <th scope="col">IMG</th>
+                                <th scope="col">EDIT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="artist in artistofSearch" :key="artist._id">
+                                <td scope="row">{{artist._id}}</td>               
+                                <td>{{artist.name}}</td>
+                                <td>image</td>
+                                <!-- <td>{{artist.image}}</td> -->
+                                <td style="display: flex; justify-content: center;">
+                                    <router-link :to="{name: 'editartist', params: {id: artist._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link>
+                                    <b-button   class="btn btnEdit" 
+                                                variant="danger"
+                                                v-bind:value="artist._id"
+                                                v-on:click="removeArtist">DELETE</b-button>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Display all artists when no use search func -->
+                <div v-if="search ==='' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">NAME ARTIST</th>
+                                <th scope="col">IMG</th>
+                                <th scope="col">EDIT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="artist in artists" :key="artist._id">
+                                <td scope="row">{{artist._id}}</td>               
+                                <td>{{artist.name}}</td>
+                                <td>image</td>
+                                <!-- <td>{{artist.image}}</td> -->
+                                <td style="display: flex; justify-content: center;">
+                                    <router-link :to="{name: 'editartist', params: {id: artist._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link>
+                                    <b-button   class="btn btnEdit" 
+                                                variant="danger"
+                                                v-bind:value="artist._id"
+                                                v-on:click="removeArtist">DELETE</b-button>
+                                </td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -65,7 +98,9 @@ export default {
     data() {
         return {
             artists: [],
-            id_del: ''
+            artistofSearch: [],
+            id_del: '',
+            search: ''
         }
     },
     async mounted() {
@@ -74,6 +109,16 @@ export default {
         this.artists = result.data;
     },
     methods: {
+        async submittoSearch() {
+            console.log("search:",this.search)
+            if(this.search){
+                this.artistofSearch = this.artists.filter((artist)=>{
+                    return artist.name.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }else{
+                return false;
+            }
+        },
         async removeArtist($event) {
             this.id_del = $event.currentTarget.value
             console.log("result:",this.id_del)
@@ -83,7 +128,6 @@ export default {
             const result1 = await deleteArtist(id)
             if(result1.status === 200) {
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         }
     }

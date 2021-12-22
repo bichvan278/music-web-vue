@@ -20,9 +20,10 @@
                         </router-link>
                     </div>
                 </div>
-                <!-- Playlist of user -->
+
+                <!-- Single of user -->
                 <hr>
-                <div class="user-playlist">
+                <div class="user-single">
                     <div class="us-text">
                         <h2 class="content-title" style="color: slategrey; margin-bottom: 5px;">MY SINGLE</h2>
                         <h2 class="contet-title" style="margin-left: 5px;"> /</h2>
@@ -30,6 +31,7 @@
                             <h2 class="content-title1" style="color: rgb(37, 28, 163);"> ADD NEW SINGLE</h2>
                         </router-link>
                     </div>
+
                     <!-- Table list of single's user -->
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
@@ -65,10 +67,16 @@
                             </tr>     
                         </tbody>
                     </table>
+                    <div v-if="singles.length >= 4">
+                        <router-link :to="{name: 'myallsingles'}" style="text-decoration: none;">
+                            <h4 class="see-more">see more . . .</h4>
+                        </router-link>
+                    </div>
                 </div>
+
                 <!-- Playlists created by user -->
                 <hr>
-                <div class="user-single">
+                <div class="user-playlist">
                     <div class="us-text">
                         <h2 class="content-title" style="color: slategrey; margin-bottom: 5px;">MY PLAYLIST</h2>
                         <h2 class="contet-title" style="margin-left: 5px;">/</h2>
@@ -82,6 +90,11 @@
                             <playlist-card v-for="playlist in playlists" :key="playlist._id" :playlist="playlist"></playlist-card>
                         </div>
                     </section>
+                    <div v-if="playlists.length >= 3">
+                        <router-link :to="{name: 'myallplaylists'}" style="text-decoration: none;">
+                            <h4 class="see-more">see more . . .</h4>
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,11 +133,11 @@ export default {
     async mounted() {
         const result1 = await getSingleofOwner();
         console.warn(result1);
-        this.singles = result1.data;
+        this.singles = result1.data.slice(0,4);
 
         const result2 = await getPlaylistofOwner();
         console.warn(result2);
-        this.playlists = result2.data;
+        this.playlists = result2.data.slice(0,3);
     },
     methods: {
         async removeSingle($event) {
@@ -133,10 +146,9 @@ export default {
             const id = this.id_del
             alert("Are you sure to remove it?")
         
-            const result1 = await deleteSingle(id)
-            if(result1.status === 200) {
+            const result3 = await deleteSingle(id)
+            if(result3.status === 200) {
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         }
     }
@@ -195,4 +207,11 @@ export default {
     margin: 5px;
     border: none;
 }
+
+.see-more {
+    text-align: center;
+    font-size: 22px;
+    color: rgb(37, 28, 163);
+}
+
 </style>

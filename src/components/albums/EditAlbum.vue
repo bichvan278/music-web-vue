@@ -2,14 +2,15 @@
     <div class="edit-album">
         <header-comp></header-comp>
         <div class="container" style="margin-top: 120px;">
-            <div class="head-title">
-                <h1 class="text-page"><span>edit album</span></h1>
-            </div>
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                     <div class="head-title">
+                        <h1 class="text-page"><span>edit album</span></h1>
+                    </div>
+                </div>
                 <!-- Form edit new album -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: -20px;">
-                    <h2 style="text-align: center">EDIT ALBUM</h2>
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 0px;">
+                    <!-- <h2 style="text-align: center">EDIT ALBUM</h2> -->
 
                     <form action="" class="frmEditalbum" @submit.prevent="submitSaveAlbum">
                         <div class="form-group">
@@ -47,7 +48,6 @@
                     </form>
                 </div>
                 <!-- End form add new album -->
-                <div class="col-md-3"></div>
             </div>
         </div>
         <footer-comp></footer-comp>

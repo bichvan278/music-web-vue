@@ -13,39 +13,75 @@
                         </router-link>
                     </div>
                     <div class="form-group" style="width: 350px; margin-left:300px;">
-                        <input type="text" placeholder=" Search here ..."  class="search-bar">
+                        <input type="text" placeholder=" Search here ..."  class="search-bar"  v-model="search" @keyup="submittoSearch">
                     </div>
                 </div>
 
-                <!-- List of all singles -->
-                <table class="table" style=" margin-top: 30px;"> 
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">POSTE BY</th>
-                            <th scope="col">NAME SONG</th>
-                            <th scope="col">IMG</th>
-                            <th scope="col">SINGER</th>
-                            <th scope="col">EDIT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="single in singles" :key="single._id">
-                            <td scope="row">{{single.postBy.username}}</td>               
-                            <td>{{single.name}}</td>
-                            <td>{{single.image}}</td>
-                            <td>{{single.artistID.name}}</td>
-                            <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editsingle', params: {id: single._id} }">
-                                    <b-button class="btn btnEdit">EDIT</b-button>
-                                </router-link>
-                                <b-button   class="btn btnEdit" 
-                                            variant="danger"
-                                            v-bind:value="single._id"
-                                            v-on:click="removeSingle">DELETE</b-button>
-                            </td>
-                        </tr>     
-                    </tbody>
-                </table>
+                <!-- Show result single of searching -->
+                <div v-if="search !=='' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">POSTE BY</th>
+                                <th scope="col">NAME SONG</th>
+                                <th scope="col">IMG</th>
+                                <th scope="col">SINGER</th>
+                                <th scope="col">EDIT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="single in singleofSearch" :key="single._id">
+                                <td scope="row">{{single.postBy.username}}</td>               
+                                <td>{{single.name}}</td>
+                                <td>{{single.image}}</td>
+                                <td>{{single.artistID.name}}</td>
+                                <td style="display: flex; justify-content: center;" v-if="single.postBy.username === name_user">
+                                    <router-link :to="{name: 'editsingle', params: {id: single._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link>
+                                    <b-button   class="btn btnEdit" 
+                                                variant="danger"
+                                                v-bind:value="single._id"
+                                                v-on:click="removeSingle">DELETE</b-button>
+                                </td>
+                                <td v-else></td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Display all singles when no use search func-->
+                <div v-if="search === '' ">
+                    <table class="table" style=" margin-top: 30px;"> 
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">POSTE BY</th>
+                                <th scope="col">NAME SONG</th>
+                                <th scope="col">IMG</th>
+                                <th scope="col">SINGER</th>
+                                <th scope="col">EDIT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="single in singles" :key="single._id">
+                                <td scope="row">{{single.postBy.username}}</td>               
+                                <td>{{single.name}}</td>
+                                <td>{{single.image}}</td>
+                                <td>{{single.artistID.name}}</td>
+                                <td style="display: flex; justify-content: center;" v-if="single.postBy.username === name_user">
+                                    <router-link :to="{name: 'editsingle', params: {id: single._id} }">
+                                        <b-button class="btn btnEdit">EDIT</b-button>
+                                    </router-link>
+                                    <b-button   class="btn btnEdit" 
+                                                variant="danger"
+                                                v-bind:value="single._id"
+                                                v-on:click="removeSingle">DELETE</b-button>
+                                </td>
+                                <td v-else></td>
+                            </tr>     
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -66,9 +102,12 @@ export default {
     data() {
         return {
             singles: [],
+            singleofSearch: [],
             id_del: '',
             owner_sing: '',
-            id_user: ''
+            id_user: '',
+            name_user: '',
+            search: ''
         }
     },
     async mounted() {
@@ -80,8 +119,20 @@ export default {
         console.warn(result1);
         this.id_user = result1.data._id;
         console.log("id_user:",this.id_user);
+        this.name_user = result1.data.username;
+        console.log("id_user:",this.name_user);
     },
     methods: {
+        async submittoSearch() {
+            console.log("search:",this.search)
+            if(this.search){
+                this.singleofSearch = this.singles.filter((single)=>{
+                    return single.name.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }else{
+                return false;
+            }
+        },
         async removeSingle($event) {
             this.id_del = $event.currentTarget.value
             console.log("result:",this.id_del)
@@ -91,7 +142,6 @@ export default {
             const result2 = await deleteSingle(id)
             if(result2.status === 200) {
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         }
     }

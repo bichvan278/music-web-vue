@@ -58,7 +58,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { getAllArtists,createSingle,getUserProfile } from "@/services/ApiServices.js"
+import { getAllArtists, createSingle, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'AddSingle',
@@ -82,7 +82,7 @@ export default {
     async created() {
         const result = await getUserProfile();
         console.warn(result);
-        this.role = result.data.role;
+        this.role = result.data.role.name;
         console.log("role:",this.role);
     },
     async mounted() {

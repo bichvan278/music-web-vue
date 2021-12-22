@@ -130,7 +130,6 @@ export default {
             const result1 = await deleteAlbum(id)
             if(result1.status === 200) {
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         },
         async submittoSearch() {

@@ -25,7 +25,7 @@
                             <th scope="col">NAME PLAYLIST</th>
                             <th scope="col">IMG</th>
                             <th scope="col">CREATED BY</th>
-                            <th scope="col">EDIT</th>
+                            <th scope="col">CREATE AT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,15 +39,7 @@
                             </td>
                             <td>image</td>
                             <td>{{playlist.createdBy.username}}</td>
-                            <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editplaylist', params: {id: playlist._id} }">
-                                    <b-button class="btn btnEdit">EDIT</b-button>
-                                </router-link>
-                                <b-button   class="btn btnEdit" 
-                                            variant="danger" 
-                                            v-bind:value="playlist._id" 
-                                            v-on:click="removePlaylist($event)">DELETE</b-button>
-                            </td>
+                            <td>{{playlist.createdAt}}</td>
                         </tr>     
                     </tbody>
                 </table>
@@ -59,7 +51,7 @@
                             <th scope="col">NAME PLAYLIST</th>
                             <th scope="col">IMG</th>
                             <th scope="col">CREATED BY</th>
-                            <th scope="col">EDIT</th>
+                            <th scope="col">CREATE AT</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,15 +65,7 @@
                             </td>
                             <td>image</td>
                             <td>{{playlist.createdBy.username}}</td>
-                            <td style="display: flex; justify-content: center;">
-                                <router-link :to="{name: 'editplaylist', params: {id: playlist._id} }">
-                                    <b-button class="btn btnEdit">EDIT</b-button>
-                                </router-link>
-                                <b-button   class="btn btnEdit" 
-                                            variant="danger" 
-                                            v-bind:value="playlist._id" 
-                                            v-on:click="removePlaylist($event)">DELETE</b-button>
-                            </td>
+                            <td>{{playlist.createdAt}}</td>
                         </tr>     
                     </tbody>
                 </table>
@@ -105,7 +89,6 @@ export default {
     data() {
         return {
             playlists: [],
-            id_del: '',
             playlistofSearch: [],
             search: ''
         }
@@ -116,18 +99,6 @@ export default {
         this.playlists = result.data;
     },
     methods: {
-        async removePlaylist($event) {
-            this.id_del = $event.currentTarget.value
-            console.log("result:",this.id_del)
-            const id = this.id_del
-            alert("Are you sure to remove it?")
-        
-            const result1 = await deletePlaylist(id)
-            if(result1.status === 200) {
-                window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
-            }
-        },
         async submittoSearch() {
             console.log("search:",this.search)
             if(this.search !== ''){

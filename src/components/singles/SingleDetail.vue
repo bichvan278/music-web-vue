@@ -9,17 +9,23 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-1"></div>
-                    <!-- Imagine single detail -->
+
+                    <!-- Main content single detail -->
                     <div class="col-md-10" style="display: grid;">
                         <div class="main-view">
                             <div class="row">
+                                <!-- Display image of single -->
                                 <div class="col-md-8">
-                                    <div class="view-img" style="margin-left: 50px;">
+                                    <div class="view-img" style="margin-left: 50px;" v-if="single.image !== null ">
+                                        <img :src="`data:image/png;base64,${single.image}`" class="img-single"/>
+                                    </div>
+                                    <div class="view-img" style="margin-left: 50px;" v-else>
                                         <img src="./../../assets/img/music.jpg" class="img-single"/>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="view-audio">
+                                        <!-- Name single and artist -->
                                         <div class="head-title">
                                             <h3 class="text-title" style="margin-left: 140px; width: 170px;"><span>{{single.name}}</span></h3>
                                         </div>
@@ -48,6 +54,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Comment Class -->
                         <div class="row cmt-content" style="display: grid;">
                             <div class="head-title">
@@ -61,7 +68,7 @@
                                             <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
                                                 style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
                                             <div class="g-mb-15">
-                                                <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">user name</h5>
+                                                <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">ADD YOUR COMMENT</h5>
                                             </div>
                                             <b-textarea style="font-size: 13px; margin-left: -5px;" 
                                                         placeholder="Comment here . . ."
@@ -73,18 +80,27 @@
                                 </div>
                             </section>
                         </div>
-                        <div class="allcmt-class">
-                            <!-- <single-cmt v-for="cmt in comments" :key="cmt._id" :cmt="cmt"></single-cmt> -->
-                            <div class="media g-mb-30 media-comment" v-for="cmt in comments" :key="cmt._id">
-                                <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
-                                <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
-                                    style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
-                                    <div class="g-mb-15">
-                                        <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">{{cmt.cmtBy.username}}</h5>
-                                    </div>
-                                    <b-textarea style="font-size: 13px; margin-left: -5px;" placeholder="">{{cmt.content}}</b-textarea>
-                                </div>
-                            </div>
+
+                        <!-- Display all comments of this single -->
+                        <div class="all-cmt" style="margin-top: 60px">
+                            <table class="table table-striped table-hover" v-if="cmtinsingle.length >= 0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">NAME</th>
+                                        <th scope="col">CONTENT</th>
+                                        <th scope="col">TIME</th>
+                                        <th scope="col">#</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="cmt in cmtinsingle" :key="cmt._id">
+                                        <td scope="row">{{cmt.cmtBy.username}}</td>
+                                        <td>{{cmt.content}}</td>
+                                        <td>{{cmt.createdAt}}</td>
+                                        <td>{{cmt._id}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <!-- End Main Content -->
@@ -98,7 +114,6 @@
 
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
-// import SingleCmt from "@/components/singles/SingleCmt.vue"
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
 import { getSingleDetail, getAllCommentinSingle, getUserProfile, createComment } from "@/services/ApiServices.js"
@@ -112,17 +127,18 @@ export default {
     },
     data() {
         return {
+            cmtinsingle: [],
             single: {
                 name: null,
                 artistID: null,
+                image: null,
                 audio: null
             },
             role: null,
             id_sing: '',
             comment: {
                 content: ''
-            },
-            comments: []
+            }
         }
     },
     async mounted() {
@@ -133,7 +149,8 @@ export default {
 
         const result1 = await getAllCommentinSingle(id);
         console.warn(result1);
-        this.comments = result1.data.allCmt[0];
+        this.cmtinsingle = result1.data;
+        console.log("cmt:",this.cmtinsingle);
 
         const result2 = await getUserProfile();
         console.warn(result2);
@@ -265,7 +282,7 @@ body {
 .view-nav {
     align-items: center;
     margin-left: 140px;
-    margin-top: -20px;
+    margin-top: -30px;
 }
 
 .name-art {
@@ -273,7 +290,7 @@ body {
     font-size: 35px;
     color: rgb(37, 28, 163);
     width: 170px;
-    margin-left: -20px;
+    margin-left: 12px;
 }
 
 .navigation {
@@ -301,6 +318,7 @@ body {
     margin-top: 35px;
     justify-content: flex-start;
     margin-left: -30px;
+    position: inherit;
 }
 
 .btn-heart {

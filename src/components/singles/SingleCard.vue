@@ -1,7 +1,7 @@
 <template>
   <div class="card">
-    <!-- <img :src="single.imgsong[0]" /> -->
-    <img src="./../../assets/img/music.jpg" />
+    <img :src="`data:image/png;base64,${single.image}`" v-if="single.image !== null " />
+    <img src="./../../assets/img/music.jpg" v-else />
     <p class="card-desc">{{single.artistID.name}}</p>
     <router-link :to="{name: 'singledetail', params: {id: single._id} }" style="text-decoration: none;">
       <p class="card-title">{{single.name}}</p>

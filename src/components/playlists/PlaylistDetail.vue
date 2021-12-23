@@ -7,7 +7,7 @@
                 <div class="info-playlist">
                     <!-- Display image -->
                     <div class="img-playlist" v-if="playlist.image !== '' ">
-                        <img :src="playlist.image" class="img-playlist">
+                        <img :src=" `data:image/png;base64,${playlist.image}` " class="img-playlist">
                     </div>
                     <div class="img-playlist" v-else>
                         <img src="./../../assets/img/music.jpg" class="img-playlist">

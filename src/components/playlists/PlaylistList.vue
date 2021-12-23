@@ -21,7 +21,7 @@
                 <table class="table" style=" margin-top: 30px;" v-if="search ==='' "> 
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">STT</th>
                             <th scope="col">NAME PLAYLIST</th>
                             <th scope="col">IMG</th>
                             <th scope="col">CREATED BY</th>
@@ -29,15 +29,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for=" playlist in playlists" :key="playlist._id">
-                            <td scope="row">{{playlist._id}}</td>               
+                        <tr v-for=" (playlist, index) in playlists" :key="playlist._id">
+                            <td scope="row">{{index + 1}}</td>               
                             <td>
                                 <router-link    :to="{name: 'playlistdetail', params: {id: playlist._id} }"
                                                 style="text-decoration: none;">
                                     <p>{{playlist.name}}</p>
                                 </router-link>
                             </td>
-                            <td>image</td>
+                            <td v-if="playlist.image !== null">
+                                <img :src="`data:image/png;base64,${playlist.image}`" style="width: 25px; height: 25px;">
+                            </td>
+                            <td v-if="playlist.image === null">
+                                <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                            </td>
                             <td>{{playlist.createdBy.username}}</td>
                             <td>{{playlist.createdAt}}</td>
                         </tr>     
@@ -47,7 +52,7 @@
                 <table class="table" style=" margin-top: 30px;" v-else> 
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">STT</th>
                             <th scope="col">NAME PLAYLIST</th>
                             <th scope="col">IMG</th>
                             <th scope="col">CREATED BY</th>
@@ -63,7 +68,12 @@
                                     <p>{{playlist.name}}</p>
                                 </router-link>
                             </td>
-                            <td>image</td>
+                            <td v-if="playlist.image !== null">
+                                <img :src="`data:image/png;base64,${playlist.image}`" style="width: 25px; height: 25px;">
+                            </td>
+                            <td v-if="playlist.image === null">
+                                <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                            </td>
                             <td>{{playlist.createdBy.username}}</td>
                             <td>{{playlist.createdAt}}</td>
                         </tr>     
@@ -88,6 +98,12 @@ export default {
     },
     data() {
         return {
+            playlist: {
+                name: null,
+                image: null,
+                createdBy: null,
+                createdAt: null
+            },
             playlists: [],
             playlistofSearch: [],
             search: ''

@@ -31,9 +31,9 @@
                         <!-- Upload image album -->
                         <div class="form-group">
                             <label for="">Image:</label>
-                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
-                            <div v-if="previewImg.length > 0">
-                                    <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: 250px; height: 250px;"/>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="selectedImgFile.length > 0">
+                                    <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: 250px; height: 250px;"/>
                             </div>
                         </div>
 
@@ -66,8 +66,8 @@ export default {
                 name: '',
                 alBofArtist: ''
             },
-            selectedImgFile: null,
-            previewImg: "",
+            image: null,
+            selectedImgFile: "",
             artists: []
         }
     },
@@ -78,13 +78,13 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            this.selectedImgFile = event.target.files[0];
-            console.log("image alb:",this.selectedImgFile)
+            this.image = event.target.files[0];
+            console.log("image alb:",this.image)
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
-            reader.readAsDataURL(this.selectedImgFile);
+            reader.readAsDataURL(this.image);
         },
         selectedObj(e) {
             this.album.alBofArtist = e.target.options[e.target.options.selectedIndex].value;
@@ -93,7 +93,7 @@ export default {
         async submitAlbum() {
             let name = this.album.name;
             let alBofArtist = this.album.alBofArtist;
-            let image = btoa(this.selectedImgFile);
+            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");;
 
             const response = await createAlbum(name, alBofArtist, image);
             if(response.status === 201){

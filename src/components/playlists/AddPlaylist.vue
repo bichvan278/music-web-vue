@@ -21,8 +21,8 @@
                         <div class="form-group">
                             <label for="image">Image:</label>
                             <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
-                            <div v-if=" previewImg.length>0 ">
-                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            <div v-if=" selectedImgFile.length>0 ">
+                                <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
@@ -55,7 +55,7 @@ export default {
                 name: ''
             },
             image: null,
-            previewImg: "",
+            selectedImgFile: "",
         }
     },
     async mounted() {
@@ -63,39 +63,17 @@ export default {
     },
     methods: {
         async selectedImg(event) {
-
-            // this.file = this.$refs.file.files[0];
-            // console.warn(this.file)
-
-            // const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
             this.image = event.target.files[0]
             console.log("image", this.image)
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
                 reader.readAsDataURL(this.image);
-
-            // console.warn(this.selectedfile.buffer);
-            // let buffer = Buffer.from(this.selectedfile,'base64');
-            // const buffer = new ArrayBuffer(strImg,"base64")
-            // const buffer = strImg.split("")
-            // console.log("buffer:", buffer)
-
-            // if(!allowedTypes.includes(file.type)){
-            //     this.message = "Filetype is wrong!!"
-            // }
-            // if(file.size>500000){
-            //     this.message = 'Too large, max size allowed is 500kb'
-            // }
         },
         async submitPlaylist() {
-            
-            // console.log("string:",strImg)
-            // let image = new FormData();
-            // image.append('image',this.image.name);
             let name = this.playlist.name;
-            let image = btoa(this.image);
+            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
 
             const response = await createPlaylist(name, image);
             console.warn(response);

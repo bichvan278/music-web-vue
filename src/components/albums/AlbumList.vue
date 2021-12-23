@@ -21,7 +21,7 @@
                 <table class="table" style=" margin-top: 30px;" v-if="search ==='' "> 
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">STT</th>
                             <th scope="col">NAME ALBUM</th>
                             <th scope="col">IMG</th>
                             <th scope="col">ARTIST</th>
@@ -29,8 +29,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="album in albums" :key="album._id">
-                            <td scope="row">{{album._id}}</td>
+                        <tr v-for="(album, index) in albums" :key="album._id">
+                            <td scope="row">{{index + 1}}</td>
                             <td>
                                 <router-link    :to="{name: 'albumdetail', 
                                                 params: {id: album._id} }"
@@ -38,8 +38,12 @@
                                     <p>{{album.name}}</p>
                                 </router-link>
                             </td>
-                            <td>image</td>
-                            <!-- <td>{{album.image}}</td> -->
+                            <td v-if="album.image !== null">
+                                <img :src="`data:image/png;base64,${album.image}`" style="width: 25px; height: 25px;">
+                            </td>
+                            <td v-if="album.image === null">
+                                <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                            </td>
                             <td>{{album.alBofArtist.name}}</td>
                             <td style="display: flex; justify-content: center;">
                                 <router-link :to="{name: 'editalbum', params: {id: album._id} }">
@@ -58,7 +62,7 @@
                 <table class="table" style=" margin-top: 30px;" v-else> 
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">STT</th>
                             <th scope="col">NAME ALBUM</th>
                             <th scope="col">IMG</th>
                             <th scope="col">ARTIST</th>
@@ -66,8 +70,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="album in albumofSearch" :key="album._id">
-                            <td scope="row">{{album._id}}</td>
+                        <tr v-for="(album, index) in albumofSearch" :key="album._id">
+                            <td scope="row">{{index + 1}}</td>
                             <td>
                                 <router-link    :to="{name: 'albumdetail', 
                                                 params: {id: album._id} }"
@@ -75,8 +79,12 @@
                                     <p>{{album.name}}</p>
                                 </router-link>
                             </td>
-                            <td>image</td>
-                            <!-- <td>{{album.image}}</td> -->
+                            <td v-if="album.image !== null">
+                                <img :src="`data:image/png;base64,${album.image}`" style="width: 25px; height: 25px;">
+                            </td>
+                            <td v-if="album.image === null">
+                                <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                            </td>
                             <td>{{album.alBofArtist.name}}</td>
                             <td style="display: flex; justify-content: center;">
                                 <router-link :to="{name: 'editalbum', params: {id: album._id} }">

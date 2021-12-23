@@ -31,9 +31,9 @@
                         <div class="form-group">
                             <label for="">Image:</label>
                             <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
-                            <div v-if="previewImg.length > 0">
+                            <div v-if="selectedImgFile.length > 0">
                                 <div>
-                                    <img class="preview my-3" :src="previewImg" alt="" style="width: fit-content; height: 50px;"/>
+                                    <img class="preview my-3" :src="selectedImgFile" alt="" style="width: fit-content; height: 50px;"/>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ export default {
                 description: ''
             },
             image: null,
-            previewImg: ""        
+            selectedImgFile: ""        
         }
     },
     async mounted() {
@@ -81,15 +81,13 @@ export default {
             console.log("image", this.image)
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
                 reader.readAsDataURL(this.image);
         },
         async submitArtist() {
             let name = this.artist.name;
-            // let image = new FormData();
-            // image.append("image", this.image);
-            let image = btoa(this.image);
+            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
             let dob = this.artist.dob;
             let description = this.artist.description;
 

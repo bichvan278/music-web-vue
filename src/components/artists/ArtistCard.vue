@@ -1,12 +1,12 @@
 <template>
-    <div class="card">
-        <!-- <img :src="artist.imgsong[0]" /> -->
-        <img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" />
-        <p class="card-desc">{{artist.artistID}}</p>
-        <router-link :to="{name: 'artistdetail', params: {id: artist._id} }" style="text-decoration: none;">
-            <p class="card-title">{{artist.name}}</p>
-        </router-link>
-    </div>
+  <div class="card">
+    <img :src="`data:image/png;base64,${artist.image}`" v-if="artist.image !== null " />
+    <img src="./../../assets/img/music.jpg" v-else />
+    <p class="card-desc">{{artist.artistID}}</p>
+    <router-link :to="{name: 'artistdetail', params: {id: artist._id} }" style="text-decoration: none;">
+      <p class="card-title">{{artist.name}}</p>
+    </router-link>
+  </div>
 </template>
 
 <script>

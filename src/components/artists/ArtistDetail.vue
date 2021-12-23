@@ -8,9 +8,13 @@
                 <div class="head-title">
                     <h1 class="text-page"><span>artist</span></h1>
                 </div>
-                <div class="art-detail" 
-                     style=" margin-top: -25px;">
-                    <img src="./../../assets/img/dongnhi.jpg" class="art-img">
+                <div class="art-detail" style=" margin-top: -25px;">
+                    <div class="art-img" v-if="currentArt.image ==='' ">
+                        <img src="./../../assets/img/dongnhi.jpg" class="art-img">
+                    </div>
+                    <div class="art-img" v-if="currentArt.image !=='' ">
+                        <img :src="`data:image/png;base64,${currentArt.image}`" class="art-img">
+                    </div>
                     <h2 class="art-name">{{currentArt.name}}</h2>
                     <p style="text-align: center; font-size: 15px;">{{currentArt.dob}}</p>
                     <p style="text-align: center; font-size: 15px;">{{currentArt.description}}</p>
@@ -60,7 +64,8 @@ export default {
             currentArt: {
                 name:'',
                 dob: '',
-                description: ''
+                description: '',
+                image: ''
             },
             singleArt: [],
             albumArt: []

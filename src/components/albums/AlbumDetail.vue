@@ -5,9 +5,12 @@
             <div class="row">
                 <!-- Album information -->
                 <div class="info-album">
-                    <div class="img-album">
-                        <!-- <img src="./../../assets/img/music.jpg" class="img-album"> -->
-                        <img v-bind:src=" `data:image/jpg;base64,${album.image}` " class="img-album">
+                    <!-- Display image of album -->
+                    <div class="img-album" v-if="album.image !== null">
+                        <img v-bind:src=" `data:image/png;base64,${album.image}` " class="img-album">
+                    </div>
+                    <div class="img-album" v-else>
+                        <img src="./../../assets/img/music.jpg" class="img-album">
                     </div>
                     <div class="detail-info-play">
                         <h4 class="u-title">ALBUM</h4>
@@ -18,10 +21,17 @@
                             <p class="edit-pro">{{album.alBofArtist.name}}</p>
                         </router-link>
                         <p class="edit-pro1">{{album.release}}</p>
-                        <div v-if="role === 'Admin' ">
+                        <div v-if="role === 'Admin' " class="class-action" style="display: flex;">
                             <router-link :to="{name: 'editalbum', params: {id: album._id} }" style="color: gray;">
                                 <p class="edit-pro" style="color: gray;">EDIT ALBUM <i class="far fa-edit"></i></p>
                             </router-link>
+                            <div>
+                                <b-button   class="btn btnEdit" 
+                                            variant="danger"
+                                            style="margin-left: 10px; margin-top: -6px;" 
+                                            v-bind:value="album._id" 
+                                            v-on:click="removeAlb()">DELETE</b-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,9 +68,9 @@
                     </table>
                 </div>
                 <!-- For Watcher + User -->
-                <div v-if="singlesinalb.length === 0" style="display: grid; justify-content: center; margin-top: 20px;">
+                <div v-if="singlesinalb.length === 0 && role !=='Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
-                    <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                    <h2 class="text-title" style="text-align: center; color: gray;">no song in album</h2>
                 </div>
                 <!-- For Admin -->
                 <div v-if=" singlesinalb.length > 0 && role === 'Admin' " style="display: grid; justify-content: center; margin-top: 20px;">
@@ -74,7 +84,7 @@
                         <h2 class="content-title1" style="color: rgb(37, 28, 163);"><i class="fas fa-plus"></i> ADD SINGLE</h2>
                     </router-link>
                     <img src="./../../assets/img/song.png" alt="" class="no-song">
-                    <h2 class="text-title" style="text-align: center; color: gray;">no song in playlist</h2>
+                    <h2 class="text-title" style="text-align: center; color: gray;">no song in album</h2>
                 </div>
             </div>
         </div>
@@ -102,7 +112,8 @@ export default {
             singlesinalb: [],
             role: null,
             id_del: '',
-            id_alb: ''
+            id_alb: '',
+            id_del_alb: ''
         }
     },
     async mounted() {
@@ -122,6 +133,17 @@ export default {
         console.log("role:", this.role);
     },
     methods: {
+        async removeAlb() {
+            this.id_del_alb = this.$route.params.id
+            console.log("result:",this.id_del_alb)
+            const id = this.id_del_alb
+            alert("Are you sure to remove it?")
+        
+            const result1 = await deleteAlbum(id)
+            if(result1.status === 200) {
+                window.location.reload();
+            }
+        },
         async removeSingleinAlbum($event) {
             this.id_del = $event.currentTarget.value
             console.log("id_single:",this.id_del)
@@ -135,7 +157,6 @@ export default {
             const result3 = await delSingleinAlbum(id_alb, id_del)
             if(result3.status === 200) {
                 window.location.reload();
-                // this.$router.replace({ name: 'playlistlist' });
             }
         }
     }
@@ -143,6 +164,10 @@ export default {
 </script>
 
 <style>
+.btnEdit {
+    margin: 5px;
+    border: 2px solid rgb(37, 28, 163);
+}
 
 .info-album{
     display: flex;

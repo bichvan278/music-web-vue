@@ -37,9 +37,9 @@
                         <!-- Upload image single -->
                         <div class="form-group">
                             <span>Image:</span>
-                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
-                            <div v-if="previewImg.length > 0">
-                                    <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="selectedImgFile.length > 0">
+                                    <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
                         
@@ -72,9 +72,9 @@ export default {
                 name: "",
                 artistID: ""
             },
-            selectedImgFile: null,
+            image: null,
             selectedAudioFile: null,
-            previewImg: "",
+            selectedImgFile: "",
             artists: [],
             role: null
         }
@@ -92,13 +92,13 @@ export default {
     },
     methods: {
         selectedImg(event) {
-            this.selectedImgFile = event.target.files[0];
-            console.log("image", this.selectedImgFile)
+            this.image = event.target.files[0];
+            console.log("image", this.image)
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
-                reader.readAsDataURL(this.selectedImgFile);
+                reader.readAsDataURL(this.image);
 
         },
         selectedAudio(event) {
@@ -113,11 +113,9 @@ export default {
             let name = this.single.name;
             this.selected = this.single.artistID;
             let artistID = this.selected;
-            let image = btoa(this.selectedImgFile);
+            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
             // let audio = this.selectedAudioFile;
-            let audio = new FormData();
-            audio.append('selectedAudioFile',this.selectedAudioFile)
-
+            
             if(image === null) {
                 alert("Upload with no image file, aren't you?")
             }

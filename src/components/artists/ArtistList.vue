@@ -22,18 +22,22 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">ID</th>
+                                <th scope="col">STT</th>
                                 <th scope="col">NAME ARTIST</th>
                                 <th scope="col">IMG</th>
                                 <th scope="col">EDIT</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="artist in artistofSearch" :key="artist._id">
-                                <td scope="row">{{artist._id}}</td>               
+                            <tr v-for="(artist, index) in artistofSearch" :key="artist._id">
+                                <td scope="row">{{index + 1}}</td>               
                                 <td>{{artist.name}}</td>
-                                <td>image</td>
-                                <!-- <td>{{artist.image}}</td> -->
+                                <td v-if="artist.image !== null">
+                                    <img :src="`data:image/png;base64,${artist.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="artist.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td style="display: flex; justify-content: center;">
                                     <router-link :to="{name: 'editartist', params: {id: artist._id} }">
                                         <b-button class="btn btnEdit">EDIT</b-button>
@@ -53,18 +57,22 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">ID</th>
+                                <th scope="col">STT</th>
                                 <th scope="col">NAME ARTIST</th>
                                 <th scope="col">IMG</th>
                                 <th scope="col">EDIT</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="artist in artists" :key="artist._id">
-                                <td scope="row">{{artist._id}}</td>               
+                            <tr v-for="(artist, index) in artists" :key="artist._id">
+                                <td scope="row">{{index + 1}}</td>               
                                 <td>{{artist.name}}</td>
-                                <td>image</td>
-                                <!-- <td>{{artist.image}}</td> -->
+                                <td v-if="artist.image !== null">
+                                    <img :src="`data:image/png;base64,${artist.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="artist.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td style="display: flex; justify-content: center;">
                                     <router-link :to="{name: 'editartist', params: {id: artist._id} }">
                                         <b-button class="btn btnEdit">EDIT</b-button>

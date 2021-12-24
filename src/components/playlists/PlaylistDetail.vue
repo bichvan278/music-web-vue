@@ -46,13 +46,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singlesinplay" :key="single._id">
-                                <td scope="row">{{single.singleIn[0].name}}</td>               
+                            <tr v-for="(single, index) in singlesinplay" :key="single._id">
+                                <td>{{index + 1}}</td>
+                                <td scope="row">{{single.singleIn[0].name}}</td>
+                                <td v-if="single.singleIn[0].image !== null">
+                                    <img :src="`data:image/png;base64,${single.singleIn[0].image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.singleIn[0].image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>               
                                 <td>Artist</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <button class="action-btn" id="play">
-                                        <i class="far fa-play-circle" style="font-size: 25px;"></i>
-                                    </button>
+                                    <router-link :to="{name: 'singledetail', params: {id: single.singleIn[0]._id} }">
+                                        <button class="action-btn" id="play">
+                                            <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                        </button>
+                                    </router-link>
                                 </td>
                                 <td v-if="id_user === owner_play">
                                     <button class="action-btn" 

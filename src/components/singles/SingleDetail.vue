@@ -37,7 +37,7 @@
                                         <!-- Button music player -->
                                         <div class="navigation">
                                             <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
-                                            <button class="action-btn" id="play">
+                                            <button class="action-btn" id="play" v-on:click="playingSingle" v-if="isPlaying === false">
                                                 <i class="far fa-play-circle" style="font-size: 45px;"></i>
                                             </button>
                                             <button class="action-btn" id="next"><i class="fas fa-forward"></i></button>
@@ -138,7 +138,8 @@ export default {
             id_sing: '',
             comment: {
                 content: ''
-            }
+            },
+            isPlaying: false
         }
     },
     async mounted() {
@@ -173,6 +174,19 @@ export default {
             }else{
                 alert("Please SIGN IN to post your comment!")
                 this.$router.replace({ name: 'signin' });
+            }
+        },
+        async playingSingle(sound) {
+            if (this.isPlaying === false) {
+                sound = `data:audio/mpeg;base64,${this.single.audio}`;
+                var audio = new Audio(sound);
+                audio.play();
+                this.isPlaying = true;
+            } else {
+                sound = `data:audio/mpeg;base64,${this.single.audio}`;
+                var audio = new Audio(sound);
+                audio.pause();
+                // this.isPlaying = false;
             }
         }
     }

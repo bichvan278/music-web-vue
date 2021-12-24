@@ -49,12 +49,14 @@
                             <tr v-for="single in singleofSearch" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
-                                <td>{{single.image}}</td>
+                                <td v-if="single.image !== null">
+                                    <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
-                                        <b-button class="btn btnEdit">EDIT</b-button>
-                                    </router-link> -->
                                     <b-button   class="btn btnEdit" 
                                                 style="margin-left: 0px;"
                                                 v-bind:value="single._id"
@@ -81,12 +83,14 @@
                             <tr v-for="single in singles" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
-                                <td>{{single.image}}</td>
+                                <td v-if="single.image !== null">
+                                    <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <!-- <router-link :to="{name: 'editsingle', params: {id: single._id} }">
-                                        <b-button class="btn btnEdit">EDIT</b-button>
-                                    </router-link> -->
                                     <b-button   class="btn btnEdit" 
                                                 style="margin-left: 0px;"
                                                 v-bind:value="single._id"

@@ -31,7 +31,7 @@
                         <!-- Upload audio single -->
                         <div class="form-group">
                             <span>Audio:</span>
-                            <input type="file" @change="selectedAudio" accept="audio" name="selectedAudioFile" class="form-group">
+                            <input type="file" @change="selectedAudio" accept="audio" name="audio" class="form-group">
                         </div>
 
                         <!-- Upload image single -->
@@ -73,6 +73,7 @@ export default {
                 artistID: ""
             },
             image: null,
+            audio: null,
             selectedAudioFile: null,
             selectedImgFile: "",
             artists: [],
@@ -102,8 +103,13 @@ export default {
 
         },
         selectedAudio(event) {
-            this.selectedAudioFile = event.target.files[0];
-            console.log("audio",this.selectedAudioFile);
+            this.audio = event.target.files[0];
+            console.log("audio",this.audio);
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.selectedAudioFile = e.target.result;
+                }
+                reader.readAsDataURL(this.audio);
         },
         selectedObj(e) {
             this.single.artistID = e.target.options[e.target.options.selectedIndex].value;
@@ -111,11 +117,11 @@ export default {
         },
         async submitSingle() {
             let name = this.single.name;
-            this.selected = this.single.artistID;
-            let artistID = this.selected;
+            let artistID = this.single.artistID;
             let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
-            // let audio = this.selectedAudioFile;
-            
+            let encodeAudio = this.selectedAudioFile.replace("data:", "").replace(/^.+,/, "");
+            let audio = utf8.encode(encodeAudio);
+
             if(image === null) {
                 alert("Upload with no image file, aren't you?")
             }

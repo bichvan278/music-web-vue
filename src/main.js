@@ -16,6 +16,8 @@ Vue.use(IconsPlugin)
 Vue.config.productionTip = false
 
 window.axios = require('axios');
+window.utf8 = require('utf8');
+
 // @ts-ignore
 window.Buffer = window.Buffer || require('buffer').Buffer;
 

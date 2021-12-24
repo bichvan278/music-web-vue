@@ -47,6 +47,12 @@
                             <tr v-for="single in singleofSearch" :key="single._id">
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
+                                <td v-if="single.image !== null">
+                                    <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
                                     <b-button   class="btn btnEdit" 

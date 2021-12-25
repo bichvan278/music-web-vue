@@ -37,6 +37,7 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">POSTE BY</th>
                                 <th scope="col">NAME SONG</th>
                                 <th scope="col">SINGER</th>
@@ -44,7 +45,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singleofSearch" :key="single._id">
+                            <tr v-for="(single, index) in singleofSearch" :key="single._id">
+                                <td>{{index + 1}}</td>
                                 <td scope="row">{{single.postBy.username}}</td>               
                                 <td>{{single.name}}</td>
                                 <td v-if="single.image !== null">
@@ -165,7 +167,11 @@ export default {
                 if(response.status === 201) {
                     alert("Successful ^^ !!!")
                     this.$router.replace({ name: 'playlistdetail', params: {id: this.ofPlaylist} });
-                }else{
+                }else if(response.singleIn === this.singleIn) {
+                    alert("This single is added in your playlist!")
+                    window.location.load();
+                }
+                else{
                     alert("Try again!")
                 }
             } else {

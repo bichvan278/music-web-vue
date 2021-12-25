@@ -31,14 +31,19 @@
                         <!-- Upload image album -->
                         <div class="form-group">
                             <span>Image:</span>
-                            <input type="text" v-model="album.image" class="form-group">
+                            <div v-if="album.image !== null ">
+                                <img :src="`data:image/png;base64,${album.image}`" class="img-art"/>
+                            </div>
+                            <div v-else>
+                                <img src="./../../assets/img/music.jpg" class="img-art"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <span>Change image:</span>
-                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
-                            <div v-if="previewImg.length > 0">
-                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="selectedImgFile.length > 0">
+                                <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
@@ -72,8 +77,9 @@ export default {
                 alBofArtist: '',
                 image: ''
             },
-            previewImg: "",
-            selectedImgFile: null,
+            selectedImgFile: "",
+            image: null,
+            sendImg: null,
             artists: []
         }
     },
@@ -86,23 +92,17 @@ export default {
         const result1 = await getAlbumDetail(id);
         console.warn(result1);
         this.album = result1.data;
-        this.album.image = atob(result1.data.image);
-        // Decode Image
-        // const dataImg = this.album.image;
-        // const decodeImg = toString(dataImg);
-        // console.log(decodeImg)
-        // const decodeImg = dataImg.join();
-        // console.log("String image:", decodeImg)
+
     },
     methods: {
         async selectedImg(event) {
-            this.selectedImgFile = event.target.files[0];
-            console.log("image alb:",this.selectedImgFile);
+            this.image = event.target.files[0];
+            console.log("image alb:",this.image);
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
-            reader.readAsDataURL(this.selectedImgFile);
+            reader.readAsDataURL(this.image);
         },
         selectedObj(e) {
             this.album.alBofArtist = e.target.options[e.target.options.selectedIndex].value;
@@ -111,13 +111,25 @@ export default {
         async submitSaveAlbum() {
             let name = this.album.name;
             let alBofArtist = this.album.alBofArtist;
-            let image = btoa(this.selectedImgFile);
+
+            // Check image before send to server
+            if (this.image !== null) {
+                this.sendImg = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
+            } else {
+                this.sendImg = this.album.image.replace("data:", "").replace(/^.+,/, "");
+            }
+            let image = this.sendImg;
             
             const id = this.$route.params.id;
             const response = await updateAlbum(id,name,alBofArtist,image);
             const {data} = response;
-            alert("Update successful!");
-            this.$router.replace({ name: 'albumlist' });
+            if (response.status === 200) {
+                alert("Update successful!");
+                this.$router.replace({ name: 'albumlist' });
+            }else {
+                alert("Update is failed !!!");
+                window.location.load();
+            }
         }
     }
 }

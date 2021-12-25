@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <!-- Form add new single -->
-                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 10px;">
+                <div class="col-md-6" style="display: grid; justify-content: center; margin-top: 10px; position: static;">
                     <h2 style="text-align: center">ADD NEW SINGLE</h2>
                     <form action="" class="frmAddsingle" @submit.prevent="submitSingle">
 
@@ -26,6 +26,9 @@
                                         v-for="artist in artists" :key="artist._id">{{artist.name}}
                                 </option>
                             </select>
+                            <p class="text1">Add an new artist here!
+                                <router-link class="btn1" :to="{name: 'addartist'}">New Artist</router-link>
+                            </p>
                         </div>
 
                         <!-- Upload audio single -->
@@ -119,8 +122,7 @@ export default {
             let name = this.single.name;
             let artistID = this.single.artistID;
             let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
-            let encodeAudio = this.selectedAudioFile.replace("data:", "").replace(/^.+,/, "");
-            let audio = utf8.encode(encodeAudio);
+            let audio = this.selectedAudioFile.replace("data:", "").replace(/^.+,/, "");
 
             if(image === null) {
                 alert("Upload with no image file, aren't you?")
@@ -147,18 +149,24 @@ export default {
 
 <style scoped>
 .btnSubmitsingle {
-    margin-left: 120px;
+    margin-left: 135px;
     background-color: white;
     color: black;
 }
 .btnSubmitsingle:hover {
-    margin-left: 120px;
+    margin-left: 135px;
     color: whitesmoke;
     background-color: rgb(42, 42, 100);
 }
-
 input, .form-group {
     width: 100%;
     padding: 5px;
+}
+.text1 {
+    margin-left: 150px;
+    margin-top: 5px;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(63, 61, 61);
 }
 </style>

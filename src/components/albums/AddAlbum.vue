@@ -33,7 +33,7 @@
                             <label for="">Image:</label>
                             <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
                             <div v-if="selectedImgFile.length > 0">
-                                    <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: 250px; height: 250px;"/>
+                                    <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
@@ -93,15 +93,16 @@ export default {
         async submitAlbum() {
             let name = this.album.name;
             let alBofArtist = this.album.alBofArtist;
-            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");;
+            let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
 
             const response = await createAlbum(name, alBofArtist, image);
             if(response.status === 201){
-                alter("Add album successful ^^ !!!")
+                alert("Add album successful ^^ !!!")
                 this.$router.replace({ name: 'albumlist' });
             }
             else{
-                alter("Try again!")
+                alert("Try again!");
+                window.location.load();
             }
         }
     }

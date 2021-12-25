@@ -21,6 +21,8 @@ import UserPlaylist from '@/components/user/UserPlaylist'
 // Artist
 import ArtistPage from '@/components/artists/ArtistPage'
 import ArtistList from '@/components/artists/ArtistList'
+import ArtistSingle from '@/components/artists/ArtistSingle'
+import ArtistAlbum from '@/components/artists/ArtistAlbum'
 import ArtistDetail from '@/components/artists/ArtistDetail'
 import AddArtist from '@/components/artists/AddArtist'
 import EditArtist from '@/components/artists/EditArtist'
@@ -119,6 +121,16 @@ export default new Router({
       path: '/artistpage',
       name: 'artistpage',
       component: ArtistPage
+    },
+    {
+      path: '/artistsingle/:id',
+      name: 'artistsingle',
+      component: ArtistSingle
+    },
+    {
+      path: '/artistalbum/:id',
+      name: 'artistalbum',
+      component: ArtistAlbum
     },
     {
       path: '/artist/:id',

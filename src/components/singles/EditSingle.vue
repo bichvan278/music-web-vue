@@ -31,26 +31,31 @@
                         <!-- Upload image single -->
                         <div class="form-group">
                             <span>Image:</span>
-                            <input type="text" v-model="single.image" placeholder="No Image " class="form-group">
+                            <div v-if="single.image !== null ">
+                                <img :src="`data:image/png;base64,${single.image}`" class="img-single"/>
+                            </div>
+                            <div v-else>
+                                <img src="./../../assets/img/music.jpg" class="img-single"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <span>Change image:</span>
-                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
-                            <div v-if="previewImg.length > 0">
-                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="selectedImgFile.length > 0">
+                                <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
                         <!-- Upload audio single -->
                         <div class="form-group">
                             <span>Audio:</span>
-                            <input type="text" v-model="single.audio" placeholder="Audio URL" class="form-group">
+                            <audio type="text" v-bind:src="`data:audio/mpeg;base64,${single.audio}`" placeholder="Audio URL" class="form-group" />
                         </div>
 
                         <div class="form-group">
                             <span>Change audio:</span>
-                            <input type="file" @change="selectedAudio" accept="audio" name="selectedAudioFile" class="form-group">
+                            <input type="file" @change="selectedAudio" accept="audio" name="audio" class="form-group">
                         </div>
 
                         <div class="form-group">
@@ -68,7 +73,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { updateSingle, getSingleDetail, getAllArtists } from "@/services/ApiServices.js"
+import { updateSingle, getSingleDetail, getAllArtists, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'EditSingle',
@@ -84,10 +89,14 @@ export default {
                 image: null,
                 audio: null
             },
-            previewImg: "",
-            selectedImgFile: null,
+            selectedImgFile: "",
+            image: null,
+            audio: null,
             selectedAudioFile: null,
-            artists: []
+            sendImg: null,
+            sendAudio: null,
+            artists: [],
+            role: null
         }
     },
     async mounted() {
@@ -100,36 +109,71 @@ export default {
         console.warn(result1);
         this.single = result1.data;
     },
+    async created() {
+        const result2 = await getUserProfile();
+        console.warn(result2);
+        this.role = result2.data.role.name;
+        console.log("role:",this.role);
+    },
     methods: {
         selectedObj(e) {
             this.single.artistID = e.target.options[e.target.options.selectedIndex].value;
             console.log("change artist:", this.single.artistID);
         },
         selectedImg(event) {
-            this.selectedImgFile = event.target.files[0];
-            console.log("image change:",this.selectedImgFile);
+            this.image = event.target.files[0];
+            console.log("image change:",this.image);
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
-            reader.readAsDataURL(this.selectedImgFile);
+            reader.readAsDataURL(this.image);
         },
         selectedAudio(event) {
-            this.selectedAudioFile = event.target.files[0];
-            console.log("audio change:",this.selectedAudioFile);
+            this.audio = event.target.files[0];
+            console.log("audio",this.audio);
+            var reader = new FileReader();
+                reader.onloadend = (e) => {
+                    this.selectedAudioFile = e.target.result;
+                }
+                reader.readAsDataURL(this.audio);
         },
         async submitSaveSingle() {
             let name = this.single.name;
             let artistID = this.single.artistID;
-            let image = btoa(this.selectedImgFile);
-            let audio = new FormData();
-            audio.append("audio", this.selectedAudioFile);
+
+            // Check image before send to server
+            if (this.image !== null) {
+                this.sendImg = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
+            } else {
+                this.sendImg = this.single.image.replace("data:", "").replace(/^.+,/, "");
+            }
+            let image = this.sendImg;
+
+            // Check audio before send to server
+            if (this.audio !== null) {
+                this.sendAudio = this.selectedAudioFile.replace("data:", "").replace(/^.+,/, "");
+            } else {
+                this.sendAudio = this.single.audio.replace("data:", "").replace(/^.+,/, "");
+            }
+            let audio = this.sendAudio;
             
             const id = this.$route.params.id;
             const response = await updateSingle(id, name, artistID, image, audio);
             const {data} = response;
             alert("Update successful!")
-            this.$router.replace({ name: 'singlelist' });
+            if (response.status === 200) {
+                alert("Update successful!");
+                if (this.role === 'Member') {
+                    // this.$router.replace({ name: 'userprofile' });
+                    window.history.back()
+                } else {
+                    this.$router.replace({ name: 'singlelist' });
+                }
+            } else {
+                alert("Update is failed !!!");
+                window.location.load();
+            }
         }
     }
 }
@@ -150,5 +194,9 @@ export default {
 input, .form-group {
     width: 100%;
     padding: 5px;
+}
+.img-single {
+    width: fit-content; 
+    height: 150px;
 }
 </style>

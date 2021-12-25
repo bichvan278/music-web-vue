@@ -16,8 +16,9 @@
                         <input  type="text" 
                                 value placeholder="  find your single..." 
                                 class="b-search"
-                                v-model="search">
-                        <button type="submit" class="btn-search" v-on:click="submittoSearch">search</button>
+                                v-model="search"
+                                @keyup="submittoSearch">
+                        <!-- <button type="submit" class="btn-search" >search</button> -->
                     </div>
                 </div>
                 <!-- Result Search -->
@@ -25,16 +26,24 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">NAME SONG</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">SINGER</th>
                                 <th scope="col">PLAY</th>
                                 <th scope="col">EDIT</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singleofSearch" :key="single._id">
-                                <!-- <td scope="row">{{single.postBy.username}}</td> -->
+                            <tr v-for="(single, index) in singleofSearch" :key="single._id">
+                                <td scope="row">{{index + 1}}</td>
                                 <td>{{single.name}}</td>
+                                <td v-if="single.image !== null">
+                                    <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
                                     <router-link :to="{name: 'singledetail', params: {id: single._id} }">
@@ -62,16 +71,24 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">NAME SONG</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">SINGER</th>
                                 <th scope="col">PLAY</th>
                                 <th scope="col">EDIT</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="single in singles" :key="single._id">
-                                <!-- <td scope="row">{{single.postBy.username}}</td> -->
+                            <tr v-for="(single, index) in singles" :key="single._id">
+                                <td scope="row">{{index + 1}}</td>
                                 <td>{{single.name}}</td>
+                                <td v-if="single.image !== null">
+                                    <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
+                                </td>
+                                <td v-if="single.image === null">
+                                    <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
+                                </td>
                                 <td>{{single.artistID.name}}</td>
                                 <td style="display: flex; justify-content: left;">
                                     <router-link :to="{name: 'singledetail', params: {id: single._id} }">

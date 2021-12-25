@@ -22,14 +22,19 @@
                         <!-- Upload image playlist -->
                         <div class="form-group">
                             <span>Image:</span>
-                            <input type="text" v-model="playlist.image" placeholder="Image URL" class="form-group">
+                            <div v-if="playlist.image !== null ">
+                                <img :src="`data:image/png;base64,${playlist.image}`" class="img-playlist"/>
+                            </div>
+                            <div v-else>
+                                <img src="./../../assets/img/music.jpg" class="img-playlist"/>
+                            </div>
                         </div>
                         
                         <div class="form-group">
                             <span>Change image:</span>
-                            <input type="file" @change="selectedImg" accept="image" name="selectedImgFile" class="form-group">
-                            <div v-if="previewImg.length > 0">
-                                <img class="preview my-3" v-bind:src="previewImg" alt="" style="width: fit-content; height: 250px;"/>
+                            <input type="file" @change="selectedImg" accept="image" name="image" class="form-group">
+                            <div v-if="selectedImgFile.length > 0">
+                                <img class="preview my-3" v-bind:src="selectedImgFile" alt="" style="width: fit-content; height: 250px;"/>
                             </div>
                         </div>
 
@@ -49,7 +54,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { updatePlaylist, getPlaylistDetail } from "@/services/ApiServices.js"
+import { updatePlaylist, getPlaylistDetail, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'EditPlaylist',
@@ -63,8 +68,10 @@ export default {
                 name: '',
                 image: ''
             },
-            previewImg: "",
-            selectedImgFile: null        
+            image: null,
+            selectedImgFile: "",
+            sendImg: null,
+            role: null        
         }
     },
     async mounted() {
@@ -73,25 +80,47 @@ export default {
         console.warn(result);
         this.playlist = result.data;
     },
+    async created() {
+        const result1 = await getUserProfile();
+        console.warn(result1);
+        this.role = result1.data.role.name;
+        console.log("role:",this.role);
+    },
     methods: {
         selectedImg(event) {
-            this.selectedImgFile = event.target.files[0];
-            console.log("image alb:",this.selectedImgFile);
+            this.image = event.target.files[0];
+            console.log("image alb:",this.image);
             var reader = new FileReader();
                 reader.onloadend = (e) => {
-                    this.previewImg = e.target.result;
+                    this.selectedImgFile = e.target.result;
                 }
-            reader.readAsDataURL(this.selectedImgFile);
+            reader.readAsDataURL(this.image);
         },
         async submitSavePlaylist() {
             let name = this.playlist.name;
-            let image = btoa(this.selectedImgFile);
+            
+            // Check image before send to server
+            if (this.image !== null) {
+                this.sendImg = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
+            } else {
+                this.sendImg = this.playlist.image.replace("data:", "").replace(/^.+,/, "");
+            }
+            let image = this.sendImg;
             
             const id = this.$route.params.id;
             const response = await updatePlaylist(id,name,image);
-            const {data} = response;
-            alert("Update successful!");
-            this.$router.replace({ name: 'playlistlist' });
+            if (response.status === 200) {
+                alert("Update successful!");
+                if (this.role === 'Member') {
+                    // this.$router.replace({ name: 'userprofile' });
+                    window.history.back()
+                } else {
+                    this.$router.replace({ name: 'playlistlist' });
+                }
+            } else {
+                alert("Update is failed !!!");
+                window.location.load();
+            }
         }
     }
 }
@@ -113,5 +142,8 @@ input, .form-group {
     width: 100%;
     padding: 5px;
 }
-
+.img-playlist {
+    width: fit-content; 
+    height: 150px;
+}
 </style>

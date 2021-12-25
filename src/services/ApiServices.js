@@ -62,7 +62,7 @@ export const getSingleofOwner = async () => (
     await instance.get(`/myAllSingles`)
 );
 
-export const updateSingle = async (id, name, image, audio) => (
+export const updateSingle = async (id, name, artistID, image, audio) => (
     await instance.patch(`/singles/${id}`,{name, artistID, image, audio})
 );
 
@@ -200,4 +200,8 @@ export const getAllCommentinSingle = async (id) => (
 
 export const createComment = async (content, cmtofSingle) => (
     await instance.post('/comment/addCmt',{content, cmtofSingle})
+);
+
+export const deleteComment = async (id) => (
+    await instance.delete(`/comment/${id}`)
 );

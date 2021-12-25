@@ -37,9 +37,21 @@
                                         <!-- Button music player -->
                                         <div class="navigation">
                                             <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
-                                            <button class="action-btn" id="play" v-on:click="playingSingle" v-if="isPlaying === false">
-                                                <i class="far fa-play-circle" style="font-size: 45px;"></i>
-                                            </button>
+                                            <button class="action-btn" id="play" v-on:click="btnActSingle">
+                                                    <i
+                                                        style="font-size: 45px;"
+                                                        class="far"
+                                                        :class="{
+                                                        'fa-play-circle': !isPlaying,
+                                                        'fa-pause-circle': isPlaying
+                                                        }"
+                                                    ></i>
+                                                </button>
+                                            <!-- <div v-bind="audio.isPlaying === true">
+                                                <button class="action-btn" id="stop" v-on:click="pauseSingle">
+                                                    <i class="far fa-pause-circle" style="font-size: 45px;"></i>
+                                                </button>
+                                            </div> -->
                                             <button class="action-btn" id="next"><i class="fas fa-forward"></i></button>
                                         </div>
                                         <!-- Music time bar -->
@@ -60,25 +72,24 @@
                             <div class="head-title">
                                 <h4 class="text-page"><span>comment</span></h4>
                             </div>
-                            <section>
-                                <div class="cmt-class">
-                                    <form action="#" class="cmt-form" @submit.prevent="submitCmt">
-                                        <div class="media g-mb-30 media-comment">
-                                            <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
-                                            <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
-                                                style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
-                                            <div class="g-mb-15">
-                                                <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">ADD YOUR COMMENT</h5>
-                                            </div>
-                                            <b-textarea style="font-size: 13px; margin-left: -5px;" 
-                                                        placeholder="Comment here . . ."
-                                                        v-model="comment.content"></b-textarea>
-                                            <button type="submit" value="POST" class="btnCmt">POST</button>
-                                            </div>
+                         
+                            <div class="cmt-class">
+                                <form action="#" class="cmt-form" @submit.prevent="submitCmt">
+                                    <div class="media g-mb-30 media-comment">
+                                        <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+                                        <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30" 
+                                            style="height: 200px; margin-top: -15px; margin-left: 10px; background-color: #fafafa;">
+                                        <div class="g-mb-15">
+                                            <h5 class="h5 g-color-gray-dark-v1 mb-0" style="color: rgb(37, 28, 163);">ADD YOUR COMMENT</h5>
                                         </div>
-                                    </form>
-                                </div>
-                            </section>
+                                        <b-textarea style="font-size: 13px; margin-left: -5px;" 
+                                                    placeholder="Comment here . . ."
+                                                    v-model="comment.content"></b-textarea>
+                                        <button type="submit" value="POST" class="btnCmt">POST</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
                         <!-- Display all comments of this single -->
@@ -89,7 +100,7 @@
                                         <th scope="col">NAME</th>
                                         <th scope="col">CONTENT</th>
                                         <th scope="col">TIME</th>
-                                        <th scope="col">#</th>
+                                        <!-- <th scope="col" v-if="id_user === cmt.cmtBy._id">#</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,7 +108,12 @@
                                         <td scope="row">{{cmt.cmtBy.username}}</td>
                                         <td>{{cmt.content}}</td>
                                         <td>{{cmt.createdAt}}</td>
-                                        <td>{{cmt._id}}</td>
+                                        <!-- <td v-if="id_user === cmt.cmtBy._id">
+                                            <b-button   class="btn btnEdit" 
+                                                        variant="danger"
+                                                        v-bind:value="cmt._id"
+                                                        v-on:click="removeComment">DELETE</b-button>
+                                        </td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -116,7 +132,7 @@
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue'
 import SearchBar from '../partial/SearchBar.vue'
-import { getSingleDetail, getAllCommentinSingle, getUserProfile, createComment } from "@/services/ApiServices.js"
+import { getSingleDetail, getAllCommentinSingle, getUserProfile, createComment, deleteComment } from "@/services/ApiServices.js"
 
 export default {
     name: 'SingleDetail',
@@ -135,10 +151,14 @@ export default {
                 audio: null
             },
             role: null,
+            id_user: '',
             id_sing: '',
             comment: {
                 content: ''
             },
+            id_del_cmt: '',
+            audio: null,
+            sound: null,
             isPlaying: false
         }
     },
@@ -150,12 +170,13 @@ export default {
 
         const result1 = await getAllCommentinSingle(id);
         console.warn(result1);
-        this.cmtinsingle = result1.data;
+        this.cmtinsingle = result1.data.allCmt;
         console.log("cmt:",this.cmtinsingle);
 
         const result2 = await getUserProfile();
         console.warn(result2);
         this.role = result2.data.role.name;
+        this.id_user = result2.data._id;
     },
     methods: {
         async submitCmt() {
@@ -176,18 +197,34 @@ export default {
                 this.$router.replace({ name: 'signin' });
             }
         },
-        async playingSingle(sound) {
-            if (this.isPlaying === false) {
-                sound = `data:audio/mpeg;base64,${this.single.audio}`;
-                var audio = new Audio(sound);
-                audio.play();
-                this.isPlaying = true;
-            } else {
-                sound = `data:audio/mpeg;base64,${this.single.audio}`;
-                var audio = new Audio(sound);
-                audio.pause();
-                // this.isPlaying = false;
+        async removeComment($event) {
+            this.id_del_cmt = $event.currentTarget.value
+            console.log("result:",this.id_del_cmt)
+            const id = this.id_del_cmt
+            alert("Are you sure to remove it?")
+        
+            const result2 = await deleteComment(id)
+            if(result2.status === 200) {
+                window.location.reload();
             }
+        },
+        async btnActSingle(status) {
+            this.isPlaying = status;
+            if ( !this.isPlaying ) {
+                this.playingSingle();
+                return;
+            }
+            this.pauseSingle();
+        },
+        async playingSingle() {
+            const sound = `data:audio/mpeg;base64,${this.single.audio}`;
+            this.audio = new Audio(sound);
+            this.audio.play();
+            return this.isPlaying = true;
+        },
+        async pauseSingle() {
+            this.audio.pause();
+            return this.isPlaying = false;
         }
     }
 }

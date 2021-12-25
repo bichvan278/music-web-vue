@@ -53,7 +53,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import {createArtist} from "@/services/ApiServices.js"
+import {createArtist, getUserProfile} from "@/services/ApiServices.js"
 
 export default {
     name: 'AddArtist',
@@ -69,11 +69,15 @@ export default {
                 description: ''
             },
             image: null,
-            selectedImgFile: ""        
+            selectedImgFile: "",
+            role: null        
         }
     },
     async mounted() {
-    
+        const result1 = await getUserProfile();
+        console.warn(result1);
+        this.role = result1.data.role.name;
+        console.log("role:",this.role);
     },
     methods: {
         selectedImg(event) {
@@ -95,7 +99,11 @@ export default {
             const {data} = response;
             if(response.status === 201){
                 alert("Added a new artist.")
-                this.$router.replace({ name: 'artistlist' });
+                if (this.role === 'Member') {
+                    this.$router.replace({ name: 'addsingle' });
+                } else {
+                    this.$router.replace({ name: 'artistlist' });
+                }
             }else{
                 alert("Sth maybe wrong!")
             }

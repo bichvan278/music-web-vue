@@ -41,7 +41,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue';
-import { createPlaylist } from "@/services/ApiServices.js"
+import { createPlaylist, getUserProfile } from "@/services/ApiServices.js"
 
 export default {
     name: 'AddPlaylist',
@@ -56,10 +56,14 @@ export default {
             },
             image: null,
             selectedImgFile: "",
+            role: null
         }
     },
     async mounted() {
-        
+        const result1 = await getUserProfile();
+        console.warn(result1);
+        this.role = result1.data.role.name;
+        console.log("role:",this.role);
     },
     methods: {
         async selectedImg(event) {
@@ -76,12 +80,16 @@ export default {
             let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
 
             const response = await createPlaylist(name, image);
-            console.warn(response);
-            if(response.status === 201 && image !== ""){
-                alert('Add playlist successful!')
-                this.$router.replace({ name: 'playlistlist' });
+            console.log("result:",response)
+            if(response.status === 201){
+                alert("Add playlist successful :) !!!")
+                if (this.role === 'Member') {
+                    this.$router.replace({ name: 'userprofile' });
+                } else {
+                    this.$router.replace({ name: 'playlistlist' });
+                }
             }else{
-                alert('Try again')
+                alert("Try again >< !")
             }
         }
     }

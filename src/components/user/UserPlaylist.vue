@@ -17,8 +17,9 @@
                         <input  type="text" 
                                 value placeholder="  find your playlist..." 
                                 class="b-search"
-                                v-model="search">
-                        <button type="submit" class="btn-search" v-on:click="submittoSearch">search</button>
+                                v-model="search"
+                                @keyup="submittoSearch">
+                        <!-- <button type="submit" class="btn-search" v-on:click="submittoSearch">search</button> -->
                     </div>
                 </div>
 

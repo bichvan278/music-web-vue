@@ -40,8 +40,10 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
+                                <th>#</th>
                                 <th scope="col">NAME SONG</th>
                                 <th scope="col">ARTIST</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">PLAY</th>
                                 <th scope="col" v-if="role ==='Admin' ">DELETE</th>
                             </tr>
@@ -58,9 +60,11 @@
                                 </td>  
                                 <td>{{album.alBofArtist.name}}</td>
                                 <td style="display: flex; justify-content: left;">
-                                    <button class="action-btn" id="play">
-                                        <i class="far fa-play-circle" style="font-size: 25px;"></i>
-                                    </button>
+                                    <router-link :to="{name: 'singledetail', params: {id: single.singleInAlb[0]._id} }">
+                                        <button class="action-btn" id="play">
+                                            <i class="far fa-play-circle" style="font-size: 25px;"></i>
+                                        </button>
+                                    </router-link>
                                 </td>
                                 <td v-if="role ==='Admin' ">
                                     <button class="action-btn" 
@@ -102,7 +106,7 @@
 <script>
 import FooterComp from '../partial/FooterComp.vue'
 import HeaderComp from '../partial/HeaderComp.vue'
-import { getAlbumDetail, getAllSinglesinAlbum, getUserProfile, delSingleinAlbum } from "@/services/ApiServices.js"
+import { getAlbumDetail, getAllSinglesinAlbum, getUserProfile, delSingleinAlbum, deleteAlbum } from "@/services/ApiServices.js"
 
 export default {
     name: 'AlbumDetial',
@@ -146,9 +150,9 @@ export default {
             const id = this.id_del_alb
             alert("Are you sure to remove it?")
         
-            const result1 = await deleteAlbum(id)
-            if(result1.status === 200) {
-                window.location.reload();
+            const result3 = await deleteAlbum(id)
+            if(result3.status === 200) {
+                this.$router.replace({name: 'albumlist'});
             }
         },
         async removeSingleinAlbum($event) {
@@ -161,8 +165,8 @@ export default {
             const id_alb = this.id_alb
             alert("Are you sure to remove it?")
         
-            const result3 = await delSingleinAlbum(id_alb, id_del)
-            if(result3.status === 200) {
+            const result4 = await delSingleinAlbum(id_alb, id_del)
+            if(result4.status === 200) {
                 window.location.reload();
             }
         }

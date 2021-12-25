@@ -2,12 +2,19 @@
     <div class="content">
         <header-comp></header-comp>
         <div class="container" style=" margin-top: 110px; ">
-            <div class="head-title">
-                <h1 class="text-page"><span>register</span></h1>
-            </div>
-            <div class="row" style="margin-top: -40px">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
+            <div class="row" style="margin-top: 0px">
+                <div class="col-md-6">
+                    <div class="head-title">
+                        <h1 class="text-page1"><span>register</span></h1>
+                    </div>
+                    <div class="head-title1">
+                        <h1 class="text-page2"><span>register</span></h1>
+                    </div>
+                    <div class="head-title2">
+                        <h1 class="text-page3"><span>register</span></h1>
+                    </div>
+                </div>
+                <div class="col-md-6" style="display: grid; justify-content: center;">
                     <!-- Default form sign up -->
                     <h3 class="res-title">TAKE IT RIGHT NOW</h3>
                         <form @submit.prevent="submitSignup">
@@ -52,8 +59,6 @@
                             </div>
                     <!-- Default form login -->
                 </div>
-
-                <div class="col-md-4"></div>
             </div>
         </div>
         <footer-comp></footer-comp>
@@ -110,11 +115,11 @@ export default {
 <style>
    
     .res-title {
-        margin-left: 40px;
-        margin-bottom: 20px;
+        margin-left: 30px;
+        margin-top: 10px;
         font-size: 30px;
         font-family: Noto Sans JP;
-        font-size: 40px;
+        /* font-size: 40px; */
         text-align: center;
         text-transform: uppercase;
         color: #222657;
@@ -123,9 +128,9 @@ export default {
     .btn-reg {
         border-radius: 30px;
         border-color: #191c1f;
-        padding: 10px 20px;
-        margin-left: 145px;
-        font-size: 18px;
+        padding: 8px 15px;
+        margin-left: 165px;
+        font-size: 16px;
         background-color: white;
         color: #222657;
         text-align: center;
@@ -150,5 +155,27 @@ export default {
 
     .social-icons {
         margin-left: 25px;
+    }
+
+    .text-page1 {
+        margin-top: 30px;
+        line-height: 0.7em;
+        text-align: center;
+        font-size: 180px;
+        color: rgb(197, 194, 194);
+    }
+     .text-page2 {
+        line-height: 0.7em;
+        text-align: center;
+        font-size: 180px;
+        color: rgb(37, 28, 163);
+        margin-top: -45px;
+    }
+    .text-page3 {
+        line-height: 0.7em;
+        text-align: center;
+        font-size: 180px;
+        margin-top: -50px;
+        color: rgb(121, 157, 235);
     }
 </style>

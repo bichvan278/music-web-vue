@@ -31,7 +31,12 @@
                         <tbody>
                             <tr v-for="(artist, index) in artistofSearch" :key="artist._id">
                                 <td scope="row">{{index + 1}}</td>               
-                                <td>{{artist.name}}</td>
+                                <td>
+                                    <router-link    :to="{name: 'artistdetail', params: {id: artist._id} }"
+                                                    style="text-decoration: none;">
+                                        <p>{{artist.name}}</p>
+                                    </router-link>
+                                </td>
                                 <td v-if="artist.image !== null">
                                     <img :src="`data:image/png;base64,${artist.image}`" style="width: 25px; height: 25px;">
                                 </td>
@@ -66,7 +71,12 @@
                         <tbody>
                             <tr v-for="(artist, index) in artists" :key="artist._id">
                                 <td scope="row">{{index + 1}}</td>               
-                                <td>{{artist.name}}</td>
+                                <td>
+                                    <router-link    :to="{name: 'artistdetail', params: {id: artist._id} }"
+                                                    style="text-decoration: none;">
+                                        <p>{{artist.name}}</p>
+                                    </router-link>
+                                </td>
                                 <td v-if="artist.image !== null">
                                     <img :src="`data:image/png;base64,${artist.image}`" style="width: 25px; height: 25px;">
                                 </td>

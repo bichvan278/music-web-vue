@@ -39,7 +39,9 @@
                     <table class="table" style=" margin-top: 30px;"> 
                         <thead class="thead-dark">
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">NAME SONG</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">ARTIST</th>
                                 <th scope="col">PLAY</th>
                                 <th scope="col" v-if="id_user === owner_play">DELETE</th>
@@ -136,10 +138,6 @@ export default {
         this.playlist = result.data;
         this.owner_play = result.data.createdBy._id;
         console.log("owner_play:",this.owner_play);
-
-        // Convert string to image file (no completed)
-        // this.playlist.image = atob(result.data.image);
-        console.log("image:", this.playlist.image)
 
         const result2 = await getAllSinglesinPlaylist(id);
         console.warn(result2.data.getAllsingles);

@@ -141,6 +141,13 @@ export default {
     },
     data() {
         return {
+            cmt: {
+                username: '',
+                content: '',
+                createdAt: '',
+                cmtBy: '',
+                _id: ''
+            },
             cmtinsingle: [],
             single: {
                 name: null,
@@ -166,15 +173,15 @@ export default {
         console.warn(result);
         this.single = result.data;
 
-        const result1 = await getAllCommentinSingle(id);
-        console.warn(result1);
-        this.cmtinsingle = result1.data.allCmt;
-        console.log("cmt:",this.cmtinsingle);
-
         const result2 = await getUserProfile();
         console.warn(result2);
         this.role = result2.data.role.name;
         this.id_user = result2.data._id;
+   
+        const result1 = await getAllCommentinSingle(id);
+        console.warn(result1);
+        this.cmtinsingle = result1.data.allCmt;
+        console.log("cmt:",this.cmtinsingle);
     },
     methods: {
         async submitCmt() {

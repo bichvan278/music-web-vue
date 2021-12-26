@@ -95,17 +95,21 @@ export default {
             let alBofArtist = this.album.alBofArtist;
             let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
 
-            const response = await createAlbum(name, alBofArtist, image);
-            if(response.status === 201){
-                alert("Add album successful ^^ !!!");
-                this.$router.replace({ name: 'albumlist' });
-            }
-            else if(response.status === 400) {
-                alert("Name album is existed!");
-                window.location.load();
-            }else{
-                alert("Try again!");
-                window.location.load();
+            if (name==='') {
+                alert("Name album must be set!")
+            } else {
+                const response = await createAlbum(name, alBofArtist, image);
+                if(response.status === 201){
+                    alert("Add album successful ^^ !!!");
+                    this.$router.replace({ name: 'albumlist' });
+                }
+                else if(response.status !== 201) {
+                    alert("Name album is existed!");
+                    window.location.load();
+                }else{
+                    alert("Try again!");
+                    window.location.load();
+                }
             }
         }
     }

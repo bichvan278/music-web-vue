@@ -79,20 +79,25 @@ export default {
             let name = this.playlist.name;
             let image = this.selectedImgFile.replace("data:", "").replace(/^.+,/, "");
 
-            const response = await createPlaylist(name, image);
-            console.log("result:",response)
-            if(response.status === 201){
-                alert("Add playlist successful :) !!!")
-                if (this.role === 'Member') {
-                    this.$router.replace({ name: 'userprofile' });
-                } else {
-                    this.$router.replace({ name: 'playlistlist' });
+            if (name === '') {
+                alert("Name playlist must be set!")
+            }
+            else {
+                const response = await createPlaylist(name, image);
+                console.log("result:",response)
+                if(response.status === 201){
+                    alert("Add playlist successful :) !!!")
+                    if (this.role === 'Member') {
+                        this.$router.replace({ name: 'userprofile' });
+                    } else {
+                        this.$router.replace({ name: 'playlistlist' });
+                    }
+                }else if(response.status !== 201) {
+                    alert("Name playlist is existed!")
+                    window.location.load();
+                }else{
+                    alert("Try again >< !")
                 }
-            }else if(response.status === 400) {
-                alert("Name playlist is existed!")
-                window.location.load();
-            }else{
-                alert("Try again >< !")
             }
         }
     }

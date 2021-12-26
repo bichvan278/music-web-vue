@@ -54,7 +54,8 @@
                                 <td v-if="single.image === null">
                                     <img src="./../../assets/img/music.jpg" style="width: 25px; height: 25px;">
                                 </td>
-                                <td>{{single.artistID.name}}</td>
+                                <!-- <td>{{single.artistID}}</td> -->
+                                <td>ARTIST</td>
                                 <td style="display: flex; justify-content: left;">
                                     <router-link :to="{name: 'singledetail', params: {id: single._id} }">
                                         <button class="action-btn" id="play">
@@ -112,7 +113,7 @@
 <script>
 import HeaderComp from "@/components/partial/HeaderComp.vue"
 import FooterComp from '../partial/FooterComp.vue'
-import {getUserProfile, getSingleofOwner, getPlaylistofOwner, deleteSingle} from "@/services/ApiServices.js"
+import {getUserProfile, getSingleofOwner, getPlaylistofOwner, getAllArtists, deleteSingle} from "@/services/ApiServices.js"
 import PlaylistCard from '../playlists/PlaylistCard.vue'
 
 export default {
@@ -128,7 +129,12 @@ export default {
             role: null,
             singles: [],
             playlists: [],
-            id_del: ''
+            id_del: '',
+            single: {
+                artistID: ''
+            },
+            artists: [],
+            id_art: []
         }
     },
     async created() {
@@ -136,6 +142,13 @@ export default {
         console.warn(result);
         this.user = result.data;
         this.role = result.data.role;
+
+        if(this.single.artistID !==''){
+            this.id_art = this.artists.filter((artist)=>{
+                return artist._id.includes(this.single.artistID)
+            })
+        }
+        console.log("result test:",this.id_art);
     },
     async mounted() {
         const result1 = await getSingleofOwner();
@@ -145,6 +158,11 @@ export default {
         const result2 = await getPlaylistofOwner();
         console.warn(result2);
         this.playlists = result2.data.slice(0,3);
+
+        const result4 = await getAllArtists();
+        console.warn(result4);
+        this.artists = result4.data;
+        
     },
     methods: {
         async removeSingle($event) {

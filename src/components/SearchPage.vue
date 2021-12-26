@@ -7,8 +7,8 @@
         <div class="container">
             <div class="row">
                 <!-- Playlist -->
-                <div class="popular-list" style="margin-top: 50px;" v-if="playlists !=='' ">
-                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="playlists !=='' ">PLAYLIST</h2>
+                <div class="popular-list" style="margin-top: 50px;" v-if="playlists.length > 0 ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);">PLAYLIST</h2>
                     <hr>
                     <section>
                         <div class="cards">
@@ -16,9 +16,10 @@
                         </div>
                     </section>
                 </div>
+     
                 <!-- Single -->
-                <div class="popular-list2" style="margin-top: 50px;" v-if="singles !=='' ">
-                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="singles !=='' ">SINGLE</h2>
+                <div class="popular-list2" style="margin-top: 50px;" v-if="singles.length > 0 ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);">SINGLE</h2>
                     <hr>
                     <section>
                         <div class="cards">
@@ -26,9 +27,10 @@
                         </div>
                     </section>
                 </div>
+                
                 <!-- Artist -->
-                <div class="popular-list3" style="margin-top: 50px;" v-if="artists !=='' ">
-                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="artists !=='' ">ARTIST</h2>
+                <div class="popular-list3" style="margin-top: 50px;" v-if="artists.length > 0 ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);">ARTIST</h2>
                     <hr>
                     <section>
                         <div class="cards">
@@ -36,8 +38,9 @@
                         </div>
                     </section>
                 </div>
+
                 <!-- Album -->
-                <div class="popular-list4" style="margin-top: 50px;" v-if="albums !=='' ">
+                <div class="popular-list4" style="margin-top: 50px;" v-if="albums.length > 0 ">
                     <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="albums !=='' ">ALBUM</h2>
                     <hr>
                     <section>
@@ -104,5 +107,9 @@ export default {
 </script>
 
 <style>
-
+.no-song{
+    width: 150px;
+    height: 150px;
+    margin: 30px;
+}
 </style>

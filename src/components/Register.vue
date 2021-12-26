@@ -104,7 +104,7 @@ export default {
             if(response.status === 201){
                 alert("Register is completely!")
                 this.$router.replace({ name: 'signin' });
-            }else if(response.status === 400 ) {
+            }else if(response.status !== 201 ) {
                 alert("Username or Email is existed!")
                 window.location.load();
             }else{

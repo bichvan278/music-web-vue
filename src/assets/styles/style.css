@@ -17,6 +17,10 @@
         color: rgb(37, 28, 163);
     }
 
+    input {
+        border: 1px solid grey;
+    }
+
     .cards {
         width: 100%;
         display: flex;

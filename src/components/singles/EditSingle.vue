@@ -50,7 +50,12 @@
                         <!-- Upload audio single -->
                         <div class="form-group">
                             <span>Audio:</span>
-                            <audio type="text" v-bind:src="`data:audio/mpeg;base64,${single.audio}`" placeholder="Audio URL" class="form-group" />
+                            <p>
+                                <audio  type="text" 
+                                        v-bind:src="`data:audio/mpeg;base64,${single.audio}`" 
+                                        placeholder="Audio URL" 
+                                        class="form-group" />
+                            </p>
                         </div>
 
                         <div class="form-group">

@@ -88,6 +88,9 @@ export default {
                 } else {
                     this.$router.replace({ name: 'playlistlist' });
                 }
+            }else if(response.status === 400) {
+                alert("Name playlist is existed!")
+                window.location.load();
             }else{
                 alert("Try again >< !")
             }

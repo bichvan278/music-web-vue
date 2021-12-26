@@ -37,21 +37,17 @@
                                         <!-- Button music player -->
                                         <div class="navigation">
                                             <button class="action-btn" id="prev"><i class="fas fa-backward"></i></button>
+                                            
                                             <button class="action-btn" id="play" v-on:click="btnActSingle">
-                                                    <i
-                                                        style="font-size: 45px;"
-                                                        class="far"
-                                                        :class="{
-                                                        'fa-play-circle': !isPlaying,
-                                                        'fa-pause-circle': isPlaying
-                                                        }"
-                                                    ></i>
-                                                </button>
-                                            <!-- <div v-bind="audio.isPlaying === true">
-                                                <button class="action-btn" id="stop" v-on:click="pauseSingle">
-                                                    <i class="far fa-pause-circle" style="font-size: 45px;"></i>
-                                                </button>
-                                            </div> -->
+                                                <i  class="far fa-play-circle" 
+                                                    style="font-size: 45px;"
+                                                    v-if="isPlaying === false"></i>
+
+                                                <i  class="far fa-pause-circle" 
+                                                    style="font-size: 45px;"
+                                                    v-else-if="isPlaying === true"></i>
+                                            </button>
+                                        
                                             <button class="action-btn" id="next"><i class="fas fa-forward"></i></button>
                                         </div>
                                         <!-- Music time bar -->
@@ -68,7 +64,7 @@
                         </div>
 
                         <!-- Comment Class -->
-                        <div class="row cmt-content" style="display: grid;">
+                        <div class="row cmt-content" style="display: grid; justify-content: left;">
                             <div class="head-title">
                                 <h4 class="text-page"><span>comment</span></h4>
                             </div>
@@ -93,9 +89,11 @@
                         </div>
 
                         <!-- Display all comments of this single -->
-                        <div class="all-cmt" style="margin-top: 60px">
-                            <table class="table table-striped table-hover" v-if="cmtinsingle.length >= 0">
-                                <thead>
+                        <div class="all-cmt" style="margin-top: 100px; display: grid;">
+                            <h2 class="cmt-title" style="color: rgb(178, 197, 240);">ALL COMMENTS</h2>
+                            <hr>
+                            <table class="table" v-if="cmtinsingle.length >= 0">
+                                <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">NAME</th>
                                         <th scope="col">CONTENT</th>
@@ -203,23 +201,24 @@ export default {
             const id = this.id_del_cmt
             alert("Are you sure to remove it?")
         
-            const result2 = await deleteComment(id)
-            if(result2.status === 200) {
+            const result3 = await deleteComment(id)
+            if(result3.status === 200) {
                 window.location.reload();
             }
         },
-        async btnActSingle(status) {
-            this.isPlaying = status;
-            if ( !this.isPlaying ) {
+        async btnActSingle() {
+            if ( this.isPlaying === false ) {
                 this.playingSingle();
-                return;
             }
-            this.pauseSingle();
+            else {
+                this.pauseSingle();
+            }
         },
         async playingSingle() {
             const sound = `data:audio/mpeg;base64,${this.single.audio}`;
             this.audio = new Audio(sound);
             this.audio.play();
+            console.log("status:",this.isPlaying)
             return this.isPlaying = true;
         },
         async pauseSingle() {

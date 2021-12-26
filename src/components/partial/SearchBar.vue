@@ -28,19 +28,10 @@ export default {
             // console.log(this.search)
             const route = { path: '/search', query: {name: this.search}}
             this.$router.push(route)
-            // const result = await searchPlaylist(name);
-            // console.log("Search: ",result);
+            window.location.load()
             console.log(route.query.name)
         }
     }
-    // watch: {
-    //     '$route.query.name': {
-    //         immediate: true,
-    //         handler(value){
-    //             this.search = value
-    //         }
-    //     }
-    // }
 }
 </script>
 

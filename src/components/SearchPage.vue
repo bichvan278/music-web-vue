@@ -6,11 +6,10 @@
 
         <div class="container">
             <div class="row">
-                <div class="head-title">
-                    <h1 class="text-page"><span>search page</span></h1>
-                </div>
                 <!-- Playlist -->
-                <div class="popular-list" style="margin-top: -80px;" v-if="playlists">
+                <div class="popular-list" style="margin-top: 50px;" v-if="playlists !=='' ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="playlists !=='' ">PLAYLIST</h2>
+                    <hr>
                     <section>
                         <div class="cards">
                             <playlist-card  v-for="playlist in playlists" :key="playlist._id" :playlist="playlist"></playlist-card>
@@ -18,7 +17,9 @@
                     </section>
                 </div>
                 <!-- Single -->
-                <div class="popular-list2" style="margin-top: -80px;" v-if="singles">
+                <div class="popular-list2" style="margin-top: 50px;" v-if="singles !=='' ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="singles !=='' ">SINGLE</h2>
+                    <hr>
                     <section>
                         <div class="cards">
                             <single-card v-for="single in singles" :key="single._id" :single="single"></single-card>
@@ -26,7 +27,9 @@
                     </section>
                 </div>
                 <!-- Artist -->
-                <div class="popular-list3" style="margin-top: -80px;" v-if="artists">
+                <div class="popular-list3" style="margin-top: 50px;" v-if="artists !=='' ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="artists !=='' ">ARTIST</h2>
+                    <hr>
                     <section>
                         <div class="cards">
                             <artist-card  v-for="artist in artists" :key="artist._id" :artist="artist"></artist-card>
@@ -34,7 +37,9 @@
                     </section>
                 </div>
                 <!-- Album -->
-                <div class="popular-list4" style="margin-top: -80px;" v-else>
+                <div class="popular-list4" style="margin-top: 50px;" v-if="albums !=='' ">
+                    <h2 class="search-title" style="color: rgb(178, 197, 240);" v-if="albums !=='' ">ALBUM</h2>
+                    <hr>
                     <section>
                         <div class="cards">
                             <album-card  v-for="album in albums" :key="album._id" :album="album"></album-card>

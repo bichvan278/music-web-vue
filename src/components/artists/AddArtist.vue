@@ -104,6 +104,9 @@ export default {
                 } else {
                     this.$router.replace({ name: 'artistlist' });
                 }
+            }else if(response.status === 400) {
+                alert("Name artist is existed!")
+                window.location.load();
             }else{
                 alert("Sth maybe wrong!")
             }

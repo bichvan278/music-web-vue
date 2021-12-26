@@ -139,7 +139,10 @@ export default {
                 } else {
                     this.$router.replace({ name: 'singlelist' });
                 }
-            }else{
+            }else if(response.status === 400) {
+                alert("Name song is existed!")
+                window.location.load();
+            }else {
                 alert("Try again >< !")
             }
         }

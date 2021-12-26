@@ -34,7 +34,12 @@
                             <tr v-for="(single, index) in singleofSearch" :key="single._id">
                                 <td>{{index + 1}}</td>
                                 <td scope="row">{{single.postBy.username}}</td>               
-                                <td>{{single.name}}</td>
+                                <td>
+                                    <router-link    :to="{name: 'singledetail', params: {id: single._id} }"
+                                                    style="text-decoration: none;">
+                                        <p>{{single.name}}</p>
+                                    </router-link>
+                                </td>
                                 <td v-if="single.image !== null">
                                     <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
                                 </td>
@@ -74,7 +79,12 @@
                             <tr v-for="(single, index) in singles" :key="single._id">
                                 <td>{{index + 1}}</td>
                                 <td scope="row">{{single.postBy.username}}</td>               
-                                <td>{{single.name}}</td>
+                                <td>
+                                    <router-link    :to="{name: 'singledetail', params: {id: single._id} }"
+                                                    style="text-decoration: none;">
+                                        <p>{{single.name}}</p>
+                                    </router-link>
+                                </td>
                                 <td v-if="single.image !== null">
                                     <img :src="`data:image/png;base64,${single.image}`" style="width: 25px; height: 25px;">
                                 </td>

@@ -28,8 +28,9 @@
                         <input  type="text" 
                                 value placeholder="  find single..." 
                                 class="b-search"
-                                v-model="search">
-                        <button type="submit" class="btn-search" @click="submittoSearch">search</button>
+                                v-model="search"
+                                @keyup="submittoSearch">
+                        <!-- <button type="submit" class="btn-search" @click="submittoSearch">search</button> -->
                     </div>
                 </div>
 
@@ -40,7 +41,7 @@
                             <tr>
                                 <th scope="col">POSTE BY</th>
                                 <th scope="col">NAME SONG</th>
-                                <th scope="col">IMG</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">SINGER</th>
                                 <th scope="col">ADD</th>
                             </tr>
@@ -74,7 +75,7 @@
                             <tr>
                                 <th scope="col">POSTE BY</th>
                                 <th scope="col">NAME SONG</th>
-                                <th scope="col">IMG</th>
+                                <th scope="col">IMAGE</th>
                                 <th scope="col">SINGER</th>
                                 <th scope="col">ADD</th>
                             </tr>
